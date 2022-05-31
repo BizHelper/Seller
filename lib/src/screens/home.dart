@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/products.dart';
+import 'package:seller_app/src/screens/account.dart';
+import 'package:seller_app/src/screens/listing.dart';
 import 'package:seller_app/src/screens/login.dart';
+import 'package:seller_app/src/screens/post.dart';
+import 'package:seller_app/src/screens/request.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -218,7 +222,6 @@ class HomeScreen extends StatelessWidget {
               const Divider(
                 color: Colors.black,
                 height: 1.0,
-                thickness: 1.5,
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
@@ -229,7 +232,7 @@ class HomeScreen extends StatelessWidget {
                       width: 52.0,
                       child: InkWell(
                         onTap: () {
-                          print('listing');
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ListingScreen()));
                         },
                         child: Column(
                           children: const [
@@ -243,7 +246,7 @@ class HomeScreen extends StatelessWidget {
                       width: 52.0,
                       child: InkWell(
                         onTap: () {
-                          print('request');
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RequestScreen()));
                         },
                         child: Column(
                           children: const [
@@ -257,7 +260,7 @@ class HomeScreen extends StatelessWidget {
                       width: 52.0,
                       child: InkWell(
                         onTap: () {
-                          print('home');
+
                         },
                         child: Column(
                           children: const [
@@ -271,7 +274,7 @@ class HomeScreen extends StatelessWidget {
                       width: 52.0,
                       child: InkWell(
                         onTap: () {
-                          print('post');
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => PostScreen()));
                         },
                         child: Column(
                           children: const [
@@ -285,7 +288,7 @@ class HomeScreen extends StatelessWidget {
                       width: 52.0,
                       child: InkWell(
                         onTap: () {
-                          print('account');
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AccountScreen()));
                         },
                         child: Column(
                           children: const [

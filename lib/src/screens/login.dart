@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.black,
             ),
             const Text(
-              "Seller Log In",
+              "Seller Login",
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
