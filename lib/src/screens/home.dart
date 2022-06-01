@@ -53,7 +53,6 @@ class HomeScreen extends StatelessWidget {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               TextButton(
                 onPressed: () {},

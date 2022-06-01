@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/listingForm.dart';
 import 'package:seller_app/src/products.dart';
 import 'package:seller_app/src/screens/account.dart';
 import 'package:seller_app/src/screens/home.dart';
@@ -41,6 +42,10 @@ class ListingScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListingForm(),
+          ),
           Column(
             children: [
               const Divider(
