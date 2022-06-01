@@ -1,21 +1,25 @@
+import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:seller_app/src/screens/home.dart';
-import 'package:seller_app/src/screens/reset.dart';
-import 'package:seller_app/src/screens/signup.dart';
+import 'package:seller_app/src/screens/verify.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({Key? key}) : super(key: key);
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignupScreenState createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   var _email;
   var _password;
+  var _shopName;
+  var userID;
   final auth = FirebaseAuth.instance;
+  //late FirebaseFirestore fstore;
+  FirebaseFirestore fstore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +45,22 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Colors.black,
             ),
             const Text(
-              "Seller Login",
+              "Seller Sign Up",
               style: TextStyle(
                 fontSize: 20.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                decoration: InputDecoration(hintText: 'Shop Name'),
+                onChanged: (value) {
+                  setState(() {
+                    _shopName = value.trim();
+                  });
+                },
               ),
             ),
             Padding(
@@ -77,39 +92,15 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.orange[600]),
-                  ),
-                  onPressed: () {
-                    _signin(_email, _password);
-                  },
-                  child: const Text(
-                    'Sign in',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
                       backgroundColor:
-                          MaterialStateProperty.all(Colors.orange[600])),
+                      MaterialStateProperty.all(Colors.orange[600])),
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SignupScreen()));
+                    _signup(_email, _password);
                   },
                   child: const Text(
                     'Sign up',
                     style: TextStyle(color: Colors.black),
                   ),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  child: Text('Forgot Password?'),
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ResetScreen()));
-                  },
                 ),
               ],
             ),
@@ -119,15 +110,22 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  _signin(String _email, String _password) async {
+  _signup(String _email, String _password) async {
     try {
       await auth
-          .signInWithEmailAndPassword(
+          .createUserWithEmailAndPassword(
           email: _email, password: _password);
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+      userID = auth.currentUser!.uid;
+      DocumentReference documentReference = fstore.collection("sellers").doc(userID);
+      Map<String, Object> user = new HashMap();
+      user.putIfAbsent('Name', () => _shopName);
+      documentReference.set(user);
+
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => VerifyScreen()));
     } on FirebaseAuthException catch (error) {
       Fluttertoast.showToast(msg: error.message!, gravity: ToastGravity.TOP);
     }
   }
+
 }

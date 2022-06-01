@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/home.dart';
@@ -37,7 +36,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text('An email has been sent to ${user.email} please verify'),
+        child: Text('An email has been sent to ${user.email}. Please verify.'),
       ),
     );
   }
