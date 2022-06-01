@@ -18,7 +18,6 @@ class _SignupScreenState extends State<SignupScreen> {
   var _shopName;
   var userID;
   final auth = FirebaseAuth.instance;
-  //late FirebaseFirestore fstore;
   FirebaseFirestore fstore = FirebaseFirestore.instance;
 
   @override
