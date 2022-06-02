@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -6,6 +8,11 @@ class ListingForm extends StatefulWidget {
 
   @override
   State<ListingForm> createState() => _ListingFormState();
+}
+
+class AuthService {
+  final FirebaseAuth _auth= FirebaseAuth.instance;
+  User? get currentUser => _auth.currentUser;
 }
 
 class _ListingFormState extends State<ListingForm> {
@@ -20,28 +27,18 @@ class _ListingFormState extends State<ListingForm> {
     'Others'
   ];
 
-  final textInputDecoration = InputDecoration(
-    fillColor: Colors.white,
-    filled: true,
-    enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Colors.white,
-        width: 2.0,
-      ),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(
-        color: Colors.pink,
-        width: 2.0,
-      ),
-    ),
-  );
+  late String _sellerName;
+  late String _currentName;
+  late String _currentURL;
+  late String _currentPrice;
+  late String _currentCategory;
+  late String _currentDescription;
 
-  String _currentName = '';
-  String _currentURL = '';
-  String _currentPrice = '';
-  String _currentCategory = '';
-  String _currentDescription = '';
+  Future<void> getName() async {
+    final uid = AuthService().currentUser?.uid;
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    _sellerName = ds.get('Name');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,43 +46,107 @@ class _ListingFormState extends State<ListingForm> {
       key: _formKey,
       child: Column(
         children: [
-          Text(
+          const Text(
             'Add Listing',
             style: TextStyle(
               fontSize: 18.0,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           TextFormField(
-            decoration: InputDecoration(hintText: 'Shop Name'),
+            decoration: InputDecoration(
+              hintText: 'Product Name',
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.orange.shade600,
+                  width: 2.0,
+                ),
+              ),
+            ),
             validator: (val) => val!.isEmpty ? 'Please enter a name' : null,
             onChanged: (val) => setState(() => _currentName = val),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           TextFormField(
-            decoration: InputDecoration(hintText: 'Image URL'),
+            decoration: InputDecoration(
+              hintText: 'Image URL',
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.orange.shade600,
+                  width: 2.0,
+                ),
+              ),
+            ),
             validator: (val) => val!.isEmpty ? 'Please insert image URL' : null,
             onChanged: (val) => setState(() => _currentURL = val),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           TextFormField(
-            decoration: InputDecoration(hintText: 'Price'),
+            decoration: InputDecoration(
+              hintText: 'Price',
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.orange.shade600,
+                  width: 2.0,
+                ),
+              ),
+            ),
             keyboardType: TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9.,]'))],
             validator: (val) => val!.isEmpty ? 'Please enter a price' : null,
             onChanged: (val) => setState(() => _currentPrice = double.parse(val).toStringAsFixed(2)),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           DropdownButtonFormField(
-            decoration: InputDecoration(hintText: 'Category'),
+            decoration: InputDecoration(
+              hintText: 'Category',
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.orange.shade600,
+                  width: 2.0,
+                ),
+              ),
+            ),
             validator: (val) => val == null ? 'Please select category' : null,
             items: categories.map((category) {
               return DropdownMenuItem(
@@ -95,11 +156,27 @@ class _ListingFormState extends State<ListingForm> {
             }).toList(),
             onChanged: (val) => setState(() => _currentCategory = val.toString()),
           ),
-          SizedBox(
+          const SizedBox(
             height: 20.0,
           ),
           TextFormField(
-            decoration: InputDecoration(hintText: 'Description'),
+            decoration: InputDecoration(
+              hintText: 'Description',
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: const OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.white,
+                  width: 2.0,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: Colors.orange.shade600,
+                  width: 2.0,
+                ),
+              ),
+            ),
             validator: (val) => val!.isEmpty ? 'Please enter a description' : null,
             onChanged: (val) => setState(() => _currentDescription = val),
           ),
@@ -108,11 +185,15 @@ class _ListingFormState extends State<ListingForm> {
                 backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
-                print(_currentName);
-                print(_currentURL);
-                print(_currentPrice);
-                print(_currentCategory);
-                print(_currentDescription);
+                  final uid = AuthService().currentUser?.uid;
+                  DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+                  _sellerName = ds.get('Name');
+                  print(_currentName);
+                  print(_currentURL);
+                  print(_currentPrice);
+                  print(_currentCategory);
+                  print(_currentDescription);
+                  print(_sellerName);
               }
             },
             child: const Text(
