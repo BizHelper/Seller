@@ -1,7 +1,9 @@
+import 'dart:collection';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:seller_app/src/screens/listing.dart';
 
 class ListingForm extends StatefulWidget {
   const ListingForm({Key? key}) : super(key: key);
@@ -188,12 +190,15 @@ class _ListingFormState extends State<ListingForm> {
                   final uid = AuthService().currentUser?.uid;
                   DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
                   _sellerName = ds.get('Name');
-                  print(_currentName);
-                  print(_currentURL);
-                  print(_currentPrice);
-                  print(_currentCategory);
-                  print(_currentDescription);
-                  print(_sellerName);
+                  DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc();
+                  Map<String, Object> listing = new HashMap();
+                  listing.putIfAbsent('Name', () => _currentName);
+                  listing.putIfAbsent('Image URL', () => _currentURL);
+                  listing.putIfAbsent('Price', () => _currentPrice);
+                  listing.putIfAbsent('Category', () => _currentCategory);
+                  listing.putIfAbsent('Description', () => _currentDescription);
+                  listing.putIfAbsent('Seller Name', () => _sellerName);
+                  dr.set(listing);
               }
             },
             child: const Text(
