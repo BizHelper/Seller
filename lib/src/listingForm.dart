@@ -13,7 +13,7 @@ class ListingForm extends StatefulWidget {
 }
 
 class AuthService {
-  final FirebaseAuth _auth= FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   User? get currentUser => _auth.currentUser;
 }
 
