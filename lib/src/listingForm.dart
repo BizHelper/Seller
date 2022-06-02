@@ -41,6 +41,7 @@ class _ListingFormState extends State<ListingForm> {
   String _currentURL = '';
   String _currentPrice = '';
   String _currentCategory = '';
+  String _currentDescription = '';
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +95,14 @@ class _ListingFormState extends State<ListingForm> {
             }).toList(),
             onChanged: (val) => setState(() => _currentCategory = val.toString()),
           ),
+          SizedBox(
+            height: 20.0,
+          ),
+          TextFormField(
+            decoration: InputDecoration(hintText: 'Description'),
+            validator: (val) => val!.isEmpty ? 'Please enter a description' : null,
+            onChanged: (val) => setState(() => _currentDescription = val),
+          ),
           ElevatedButton(
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
@@ -103,6 +112,7 @@ class _ListingFormState extends State<ListingForm> {
                 print(_currentURL);
                 print(_currentPrice);
                 print(_currentCategory);
+                print(_currentDescription);
               }
             },
             child: const Text(

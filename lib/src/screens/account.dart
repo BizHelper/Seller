@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/products.dart';
@@ -6,10 +7,9 @@ import 'package:seller_app/src/screens/listing.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/post.dart';
 import 'package:seller_app/src/screens/request.dart';
+import 'package:seller_app/src/screens/signup.dart';
 
 class AccountScreen extends StatelessWidget {
-  const AccountScreen({Key? key}) : super(key: key);
-
   final auth = FirebaseAuth.instance;
 
   @override
