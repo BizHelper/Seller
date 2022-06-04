@@ -5,12 +5,28 @@ import 'package:seller_app/src/screens/account.dart';
 import 'package:seller_app/src/screens/listing.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/post.dart';
+import 'package:seller_app/src/screens/productDescription.dart';
 import 'package:seller_app/src/screens/request.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  //const HomeScreen({Key? key}) : super(key: key);
 
   final FirebaseAuth auth = FirebaseAuth.instance;
+  late var prodName = '';
+  late var prodShopName='';
+  late var prodPrice= '';
+  late var prodDescription = '';
+  late var prodCategory = '';
+  late var prodImage = '';
+
+// class HomeScreen extends StatefulWidget {
+//   const HomeScreen({Key? key}) : super(key: key);
+//
+//   @override
+//   State<HomeScreen> createState() => _HomeScreenState();
+// }
+
+//class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
@@ -233,7 +249,20 @@ class HomeScreen extends StatelessWidget {
                             child: Material(
                               child: InkWell(
                                 onTap: () {
-
+                                  prodName = listings['Name'];
+                                  prodShopName = listings['Seller Name'];
+                                  prodPrice = listings['Price'];
+                                  prodCategory = listings['Category'];
+                                  prodDescription = listings['Description'];
+                                  prodImage = listings['Image URL'];
+                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ProductDescriptionScreen(
+                                    productDetailName: prodName,
+                                    productDetailShopName: prodShopName,
+                                    productDetailPrice:  prodPrice,
+                                    productDetailCategory: prodCategory,
+                                    productDetailDescription: prodDescription,
+                                    productDetailImages: prodImage,
+                                  )));
                                 },
                                 child: GridTile(
                                   footer: Container(
