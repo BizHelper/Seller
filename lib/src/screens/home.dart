@@ -193,7 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ],
                                     ),
                                   ),
-                                  child: Image.network(listings['Image URL']),
+                                  child: (Uri.tryParse(listings['Image URL'])?.hasAbsolutePath ?? false)
+                                      ? Image.network(listings['Image URL'])
+                                      : Image.asset('images/noImage.jpg'),
                                 ),
                               ),
                             ),

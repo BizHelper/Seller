@@ -55,11 +55,11 @@ class CategoryScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(left: 11.0, top: 12),
                 child: Text(
-                  '$currentCategory',
-                  style: const TextStyle(
+                  'My Products',
+                  style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
@@ -150,7 +150,9 @@ class CategoryScreen extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  child: Image.network(listings['Image URL']),
+                                  child: (Uri.tryParse(listings['Image URL'])?.hasAbsolutePath ?? false)
+                                      ? Image.network(listings['Image URL'])
+                                      : Image.asset('images/noImage.jpg'),
                                 ),
                               ),
                             ),

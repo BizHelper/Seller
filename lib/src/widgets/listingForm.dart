@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:seller_app/src/screens/listing.dart';
 
 class ListingForm extends StatefulWidget {
   const ListingForm({Key? key}) : super(key: key);
@@ -203,6 +204,7 @@ class _ListingFormState extends State<ListingForm> {
                   listing.putIfAbsent('Description', () => _currentDescription);
                   listing.putIfAbsent('Seller Name', () => _sellerName);
                   dr.set(listing);
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ListingScreen()));
               }
             },
             child: const Text(
