@@ -6,8 +6,23 @@ import 'package:seller_app/src/screens/productDescription.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
-class CategoryScreen extends StatelessWidget {
+class CategoryScreen extends StatefulWidget {
+
   var currentCategory;
+
+  CategoryScreen({this.currentCategory});
+
+  @override
+  State<CategoryScreen> createState() => _CategoryScreenState();
+}
+
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? get currentUser => _auth.currentUser;
+}
+
+class _CategoryScreenState extends State<CategoryScreen> {
+
   final FirebaseAuth auth = FirebaseAuth.instance;
   late var prodName = '';
   late var prodShopName='';
@@ -15,8 +30,19 @@ class CategoryScreen extends StatelessWidget {
   late var prodDescription = '';
   late var prodCategory = '';
   late var prodImage = '';
+  String _sellerName = '';
 
-  CategoryScreen({this.currentCategory});
+  Future<String> getSellerName() async {
+    final uid = AuthService().currentUser?.uid;
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    setState(() => _sellerName = ds.get('Name'));
+    return _sellerName;
+  }
+
+  String getName() {
+    getSellerName();
+    return _sellerName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +71,8 @@ class CategoryScreen extends StatelessWidget {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('listings')
-            .where('Category', isEqualTo: currentCategory)
+            .where('Category', isEqualTo: widget.currentCategory)
+            .where('Seller Name', isEqualTo: getName())
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -66,7 +93,7 @@ class CategoryScreen extends StatelessWidget {
                 ),
               ),
               Categories(
-                currentCategory: '$currentCategory',
+                currentCategory: widget.currentCategory,
               ),
               Flexible(
                 child: GridView.count(

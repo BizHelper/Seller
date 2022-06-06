@@ -20,9 +20,6 @@ class AuthService {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-// class HomeScreen extends StatelessWidget {
-  //const HomeScreen({Key? key}) : super(key: key);
-
   final FirebaseAuth auth = FirebaseAuth.instance;
   late var prodName = '';
   late var prodShopName='';
@@ -30,35 +27,18 @@ class _HomeScreenState extends State<HomeScreen> {
   late var prodDescription = '';
   late var prodCategory = '';
   late var prodImage = '';
-  late String sellerName;
-  //String _sellerName = (getName());
+  String _sellerName = '';
 
-  // Future<String> getName() async {
-  //   final uid = AuthService().currentUser?.uid;
-  //   DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
-  //   sellerName = ds.get('Name');
-  //   return sellerName;
-  // }
-
-  Future<String> getName() async {
+  Future<String> getSellerName() async {
     final uid = AuthService().currentUser?.uid;
     DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
-    sellerName = ds.get('Name');
-    return sellerName;
+    setState(() => _sellerName = ds.get('Name'));
+    return _sellerName;
   }
 
-  String get(Future<String> name) {
-    // String seller = 'test';
-    // name.then((String result) {
-    //   //setState(() {
-    //     seller = result.toString();
-    //     print('result: ' + result);
-    //     print('seller2: ' + seller);
-    //   //});
-    // });
-    // print('seller1: ' + seller);
-    // return seller;
-    return 'Modern Times';
+  String getName() {
+    getSellerName();
+    return _sellerName;
   }
 
   @override
@@ -88,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('listings')
-            .where('Seller Name', isEqualTo: get(getName()))
+            .where('Seller Name', isEqualTo: getName())
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
