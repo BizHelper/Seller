@@ -99,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Padding(
-                padding: EdgeInsets.only(left: 11.0, top: 12),
+                padding: EdgeInsets.only(left: 8.0, top: 8.0),
                 child: Text(
                   'My Products',
                   style: TextStyle(

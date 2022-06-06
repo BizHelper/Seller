@@ -34,18 +34,22 @@ class ListingScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListingForm(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView(
+              children: const [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ListingForm(),
+                ),
+              ],
             ),
-            NavigateBar(),
-          ],
-        ),
+          ),
+          NavigateBar(),
+        ],
       ),
     );
   }

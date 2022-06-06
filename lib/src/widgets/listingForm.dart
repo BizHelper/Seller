@@ -47,11 +47,16 @@ class _ListingFormState extends State<ListingForm> {
       key: _formKey,
       child: Column(
         children: [
-          const Text(
-            'Add Listing',
-            style: TextStyle(
-              fontSize: 18.0,
-            ),
+          Row(
+            children: const [
+              Text(
+                'Add Listing',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
           ),
           const SizedBox(
             height: 20.0,
