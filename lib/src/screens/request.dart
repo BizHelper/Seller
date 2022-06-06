@@ -1,11 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_app/src/products.dart';
-import 'package:seller_app/src/screens/account.dart';
-import 'package:seller_app/src/screens/home.dart';
-import 'package:seller_app/src/screens/listing.dart';
 import 'package:seller_app/src/screens/login.dart';
-import 'package:seller_app/src/screens/post.dart';
+import 'package:seller_app/src/widgets/navigateBar.dart';
 
 class RequestScreen extends StatelessWidget {
   const RequestScreen({Key? key}) : super(key: key);
@@ -41,92 +37,7 @@ class RequestScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            children: [
-              const Divider(
-                color: Colors.black,
-                height: 1.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    SizedBox(
-                      width: 52.0,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ListingScreen()));
-                        },
-                        child: Column(
-                          children: const [
-                            Icon(Icons.add_to_photos),
-                            Text('Listing'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 52.0,
-                      child: InkWell(
-                        onTap: () {
-
-                        },
-                        child: Column(
-                          children: const [
-                            Icon(Icons.sticky_note_2),
-                            Text('Request'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 52.0,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
-                        },
-                        child: Column(
-                          children: const [
-                            Icon(Icons.home),
-                            Text('Home'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 52.0,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => PostScreen()));
-                        },
-                        child: Column(
-                          children: const [
-                            Icon(Icons.camera_alt),
-                            Text('Post'),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 52.0,
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AccountScreen()));
-                        },
-                        child: Column(
-                          children: const [
-                            Icon(Icons.account_box),
-                            Text('Account'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          NavigateBar(),
         ],
       ),
     );

@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:seller_app/src/screens/listing.dart';
 
 class ListingForm extends StatefulWidget {
   const ListingForm({Key? key}) : super(key: key);
@@ -21,8 +20,8 @@ class _ListingFormState extends State<ListingForm> {
   final _formKey = GlobalKey<FormState>();
   final List<String> categories = [
     'Bags & Wallets',
-    'Female Clothing',
-    'Male Clothing',
+    'Women\'s Clothes',
+    'Men\'s Clothes',
     'Food & Beverage',
     'Accessories',
     'Toys & Games',

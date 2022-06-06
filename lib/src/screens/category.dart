@@ -6,23 +6,8 @@ import 'package:seller_app/src/screens/productDescription.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-
-// class HomeScreen extends StatelessWidget {
-  //const HomeScreen({Key? key}) : super(key: key);
-
+class CategoryScreen extends StatelessWidget {
+  var currentCategory;
   final FirebaseAuth auth = FirebaseAuth.instance;
   late var prodName = '';
   late var prodShopName='';
@@ -30,36 +15,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late var prodDescription = '';
   late var prodCategory = '';
   late var prodImage = '';
-  late String sellerName;
-  //String _sellerName = (getName());
 
-  // Future<String> getName() async {
-  //   final uid = AuthService().currentUser?.uid;
-  //   DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
-  //   sellerName = ds.get('Name');
-  //   return sellerName;
-  // }
-
-  Future<String> getName() async {
-    final uid = AuthService().currentUser?.uid;
-    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
-    sellerName = ds.get('Name');
-    return sellerName;
-  }
-
-  String get(Future<String> name) {
-    // String seller = 'test';
-    // name.then((String result) {
-    //   //setState(() {
-    //     seller = result.toString();
-    //     print('result: ' + result);
-    //     print('seller2: ' + seller);
-    //   //});
-    // });
-    // print('seller1: ' + seller);
-    // return seller;
-    return 'Modern Times';
-  }
+  CategoryScreen({this.currentCategory});
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('listings')
-            .where('Seller Name', isEqualTo: get(getName()))
+            .where('Category', isEqualTo: currentCategory)
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -98,24 +55,24 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(left: 11.0, top: 12),
                 child: Text(
-                  'My Products',
-                  style: TextStyle(
+                  '$currentCategory',
+                  style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
               Categories(
-                currentCategory: 'All Products',
+                currentCategory: '$currentCategory',
               ),
               Flexible(
                 child: GridView.count(
                   crossAxisCount: 2,
                   children: snapshot.data!.docs.map(
-                    (listings) {
+                        (listings) {
                       return Center(
                         child: Card(
                           child: Hero(
@@ -146,7 +103,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.only(
