@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/account.dart';
-import 'package:seller_app/src/screens/explore.dart';
 import 'package:seller_app/src/screens/home.dart';
 import 'package:seller_app/src/screens/listing.dart';
 import 'package:seller_app/src/screens/request.dart';
+import 'package:seller_app/src/widgets/post.dart';
 
 class NavigateBar extends StatelessWidget {
 
@@ -71,7 +71,7 @@ class NavigateBar extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => ExploreScreen()));
+                            builder: (context) => PostScreen()));
                   },
                   child: Column(
                     children: const [

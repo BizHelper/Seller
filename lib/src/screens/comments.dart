@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_app/src/screens/explore.dart';
+import 'package:seller_app/src/widgets/post.dart';
 
 final commentRef = FirebaseFirestore.instance.collection('comments');
 late CollectionReference buyersRef =
@@ -70,7 +70,7 @@ class CommentsScreenState extends State<CommentsScreen> {
           icon: Icon(Icons.arrow_back_rounded),
           onPressed: () {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => ExploreScreen()));
+                MaterialPageRoute(builder: (context) => PostScreen()));
           },
         ),
         title: const Text(
