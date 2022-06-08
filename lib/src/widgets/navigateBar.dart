@@ -3,7 +3,7 @@ import 'package:seller_app/src/screens/account.dart';
 import 'package:seller_app/src/screens/home.dart';
 import 'package:seller_app/src/screens/listing.dart';
 import 'package:seller_app/src/screens/request.dart';
-import 'package:seller_app/src/widgets/post.dart';
+import 'package:seller_app/src/screens/post.dart';
 
 class NavigateBar extends StatelessWidget {
 
