@@ -1,10 +1,54 @@
+import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
-class AccountScreen extends StatelessWidget {
-  final auth = FirebaseAuth.instance;
+class AccountScreen extends StatefulWidget {
+  @override
+  State<AccountScreen> createState() => _AccountScreenState();
+}
+
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? get currentUser => _auth.currentUser;
+}
+
+class _AccountScreenState extends State<AccountScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  String _sellerName = '';
+  var _image = '';
+
+  Future<String> getSellerName() async {
+    final uid = AuthService().currentUser?.uid;
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    setState(() => _sellerName = ds.get('Name'));
+    return _sellerName;
+  }
+
+  String getName() {
+    getSellerName();
+    return _sellerName;
+  }
+
+  Future<String> getImageFile() async {
+    final uid = AuthService().currentUser?.uid;
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    setState(() {
+      if ((ds.data() as Map<String, dynamic>).containsKey('Profile Pic')) {
+        _image = ds.get('Profile Pic');
+      }
+    });
+    return _image;
+  }
+
+  String getImage() {
+    getImageFile();
+    return _image;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +75,59 @@ class AccountScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          NavigateBar(),
-        ],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              getName(),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            !(Uri.tryParse(getImage())?.hasAbsolutePath ?? false)
+              ? Image.asset('images/noProfilePic.png')
+              : Image.network(_image),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                ElevatedButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
+                  onPressed: () async {
+                    final uid = AuthService().currentUser?.uid;
+                    String sellerName = getName();
+                    DocumentReference dr = FirebaseFirestore.instance.collection('sellers').doc(uid);
+                    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                    if (pickedFile == null) {
+                      print('null');
+                      return;
+                    }
+                    final File image = (File(pickedFile.path));
+
+                    FirebaseStorage storage = FirebaseStorage.instance;
+                    Reference ref = storage.ref().child(pickedFile.path + DateTime.now().toString());
+                    await ref.putFile(image);
+                    String imageURL = await ref.getDownloadURL();
+                    dr.set({
+                      'Name' : sellerName,
+                      'Profile Pic' : imageURL
+                    });
+                    setState(() => _image = imageURL);
+                  },
+                  child: const Text(
+                    'Change Profile Picture',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ],
+            ),
+            NavigateBar(),
+          ],
+        ),
       ),
     );
   }

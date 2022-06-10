@@ -38,14 +38,12 @@ class ListingScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: ListView(
-              children: const [
-                Padding(
+          const Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: ListingForm(),
                 ),
-              ],
             ),
           ),
           NavigateBar(),
