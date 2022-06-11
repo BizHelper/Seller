@@ -30,7 +30,6 @@ class _VideoScreenState extends State<VideoScreen> {
     controller.initialize().then((value){
       setState(() {});
     });
-
   }
 
   @override
@@ -66,9 +65,11 @@ class _VideoScreenState extends State<VideoScreen> {
                 ),
               ],
             ),
-            AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: VideoPlayer(controller),
+            Expanded(
+              child: AspectRatio(
+                aspectRatio: controller.value.aspectRatio,
+                child: VideoPlayer(controller),
+              ),
             ),
             const SizedBox(
               height: 20,
