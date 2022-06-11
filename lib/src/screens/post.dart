@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/comments.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/postForm.dart';
+import 'package:seller_app/src/screens/video.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
 class PostScreen extends StatefulWidget {
@@ -19,13 +20,13 @@ class AuthService {
 }
 
 class _PostScreenState extends State<PostScreen> {
-
   final auth = FirebaseAuth.instance;
   String _sellerName = '';
 
   Future<String> getSellerName() async {
     final uid = AuthService().currentUser?.uid;
-    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    DocumentSnapshot ds =
+        await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
     setState(() => _sellerName = ds.get('Name'));
     return _sellerName;
   }
@@ -61,7 +62,8 @@ class _PostScreenState extends State<PostScreen> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('posts')
+          stream: FirebaseFirestore.instance
+              .collection('posts')
               .where('Seller Name', isEqualTo: getName())
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -87,9 +89,10 @@ class _PostScreenState extends State<PostScreen> {
                       ElevatedButton(
                         style: ButtonStyle(
                             backgroundColor:
-                            MaterialStateProperty.all(Colors.orange[600])),
+                                MaterialStateProperty.all(Colors.orange[600])),
                         onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostFormScreen()));
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => PostFormScreen()));
                         },
                         child: const Text(
                           'Add New Post',
@@ -103,7 +106,7 @@ class _PostScreenState extends State<PostScreen> {
                   child: GridView.count(
                     crossAxisCount: 1,
                     children: snapshot.data!.docs.map(
-                          (posts) {
+                      (posts) {
                         return Center(
                           child: Card(
                             child: Hero(
@@ -111,43 +114,66 @@ class _PostScreenState extends State<PostScreen> {
                               child: Material(
                                 child: InkWell(
                                   onTap: () {
+                                    Navigator.of(context)
+                                        .pushReplacement(MaterialPageRoute(
+                                            builder: (context) => VideoScreen(
+                                                  videoURL: posts['URL'],
+                                                  description:
+                                                      posts['Description'],
+                                                )));
                                   },
                                   child: GridTile(
-                                    footer: Container(
-                                      color: Colors.white70,
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 16,
-                                                right: 16,
-                                                top: 4,
-                                                bottom: 4),
-                                            child: Text(
-                                              'by ' + posts['Seller Name'],
-                                              style: const TextStyle(
-                                                color: Colors.black54,
-                                                fontWeight: FontWeight.w800,
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                        Expanded(
+                                            child: Image.asset('images/playVideo.png')),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  posts['Description'],
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 8,
+                                                    right: 16,
+                                                    top: 4,
+                                                    bottom: 4),
+                                                child: Text(
+                                                  'by ' + posts['Seller Name'],
+                                                  style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
+                                                ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CommentsScreen(
+                                                    postID: posts['Post ID'],
+                                                  )));
+                                                },
+                                                child: const Text('Add Comment'),
+                                              ),
+                                            ],
                                           ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CommentsScreen(
-                                                postID: posts['Post ID'],
-                                              )));
-                                            },
-                                            child: const Text(
-                                                'Add Comment'
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
-                                    child: (Uri.tryParse(posts['Image URL'])?.hasAbsolutePath ?? false)
-                                        ? Image.network(posts['Image URL'])
-                                        : Image.asset('images/noImage.jpg'),
                                   ),
                                 ),
                               ),
@@ -161,8 +187,7 @@ class _PostScreenState extends State<PostScreen> {
                 NavigateBar(),
               ],
             );
-          }
-      ),
+          }),
     );
   }
 }
