@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:seller_app/src/screens/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ class ProductDescriptionScreen extends StatelessWidget {
   var productDetailCategory;
   var productDetailDescription;
   var productDetailImages;
+  var productID;
 
   ProductDescriptionScreen(
       {this.productDetailName,
@@ -16,7 +18,8 @@ class ProductDescriptionScreen extends StatelessWidget {
       this.productDetailPrice,
       this.productDetailCategory,
       this.productDetailDescription,
-      this.productDetailImages});
+      this.productDetailImages,
+      this.productID});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,6 +42,7 @@ class ProductDescriptionScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 300,
@@ -69,16 +73,11 @@ class ProductDescriptionScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'by: $productDetailShopName',
-                      style: const TextStyle(
-                        fontSize: 15,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  'by: $productDetailShopName',
+                  style: const TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
               ),
               const SizedBox(
@@ -108,6 +107,38 @@ class ProductDescriptionScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                         ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc(productID);
+                        dr.delete();
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => HomeScreen()));
+                      },
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.delete,
+                            size: 28.0,
+                            color: Colors.red[900],
+                          ),
+                          Text(
+                            'Delete Listing',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red[900],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],

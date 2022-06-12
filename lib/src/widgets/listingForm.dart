@@ -1,6 +1,9 @@
 import 'dart:collection';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:seller_app/src/screens/listing.dart';
@@ -29,17 +32,50 @@ class _ListingFormState extends State<ListingForm> {
     'Others'
   ];
 
+  PlatformFile? pickedImageFile;
+  UploadTask? uploadTaskImage;
+  final db = FirebaseFirestore.instance;
+
   late String _sellerName;
   late String _currentName;
   late String _currentURL;
   late String _currentPrice;
   late String _currentCategory;
   late String _currentDescription;
+  bool imageSelected = false;
 
   Future<void> getName() async {
     final uid = AuthService().currentUser?.uid;
     DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
     _sellerName = ds.get('Name');
+  }
+
+  Future selectImageFile() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+    setState(() {
+      pickedImageFile = result.files.first;
+      imageSelected = true;
+    });
+  }
+
+  Future uploadImageFile() async {
+    final path = 'files/${pickedImageFile!.name}';
+    final file = File(pickedImageFile!.path!);
+    final ref = FirebaseStorage.instance.ref().child(path);
+    setState(() {
+      uploadTaskImage = ref.putFile(file);
+    });
+    ref.putFile(file);
+    uploadTaskImage = ref.putFile(file);
+    final snapshot = await uploadTaskImage!.whenComplete(() => {});
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    setState(() {
+      _currentURL = urlDownload;
+      uploadTaskImage = null;
+      imageSelected = false;
+    });
   }
 
   @override
@@ -82,30 +118,6 @@ class _ListingFormState extends State<ListingForm> {
             ),
             validator: (val) => val!.isEmpty ? 'Please enter a name' : null,
             onChanged: (val) => setState(() => _currentName = val),
-          ),
-          const SizedBox(
-            height: 20.0,
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-              hintText: 'Image URL',
-              fillColor: Colors.white,
-              filled: true,
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.white,
-                  width: 2.0,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.orange.shade600,
-                  width: 2.0,
-                ),
-              ),
-            ),
-            validator: (val) => val!.isEmpty ? 'Please insert image URL' : null,
-            onChanged: (val) => setState(() => _currentURL = val),
           ),
           const SizedBox(
             height: 20.0,
@@ -187,30 +199,62 @@ class _ListingFormState extends State<ListingForm> {
             validator: (val) => val!.isEmpty ? 'Please enter a description' : null,
             onChanged: (val) => setState(() => _currentDescription = val),
           ),
-          ElevatedButton(
-            style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
-            onPressed: () async {
-              if (_formKey.currentState!.validate()) {
-                  final uid = AuthService().currentUser?.uid;
-                  DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
-                  _sellerName = ds.get('Name');
-                  DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc();
-                  Map<String, Object> listing = new HashMap();
-                  listing.putIfAbsent('Name', () => _currentName);
-                  listing.putIfAbsent('Image URL', () => _currentURL);
-                  listing.putIfAbsent('Price', () => _currentPrice);
-                  listing.putIfAbsent('Category', () => _currentCategory);
-                  listing.putIfAbsent('Description', () => _currentDescription);
-                  listing.putIfAbsent('Seller Name', () => _sellerName);
-                  dr.set(listing);
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ListingScreen()));
-              }
-            },
-            child: const Text(
-              'Add',
-              style: TextStyle(color: Colors.black),
-            ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
+                onPressed: () async {
+                  selectImageFile();
+                },
+                child: const Text(
+                  'Select Image',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+              imageSelected ?
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
+                onPressed: () async {
+                  if (_formKey.currentState!.validate()) {
+                    await uploadImageFile();
+
+                    final uid = AuthService().currentUser?.uid;
+                    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+                    _sellerName = ds.get('Name');
+                    DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc();
+                    Map<String, Object> listing = new HashMap();
+                    listing.putIfAbsent('Name', () => _currentName);
+                    listing.putIfAbsent('Image URL', () => _currentURL);
+                    listing.putIfAbsent('Price', () => _currentPrice);
+                    listing.putIfAbsent('Category', () => _currentCategory);
+                    listing.putIfAbsent('Description', () => _currentDescription);
+                    listing.putIfAbsent('Listing ID', () => dr.id);
+                    listing.putIfAbsent('Seller Name', () => _sellerName);
+                    dr.set(listing);
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ListingScreen()));
+                  }
+                },
+                child: const Text(
+                  'Add',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ) :
+              ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.amber[600])),
+                onPressed: () {},
+                child: const Text(
+                  'Add',
+                  style: TextStyle(color: Colors.black),
+                ),
+              ),
+            ],
           ),
         ],
       ),

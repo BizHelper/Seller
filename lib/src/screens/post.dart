@@ -62,155 +62,146 @@ class _PostScreenState extends State<PostScreen> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance
-              .collection('posts')
-              .where('Seller Name', isEqualTo: getName())
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'My Posts',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+        stream: FirebaseFirestore.instance
+            .collection('posts')
+            .where('Seller Name', isEqualTo: getName())
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
+          }
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'My Posts',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStateProperty.all(Colors.orange[600])),
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => PostFormScreen()));
-                        },
-                        child: const Text(
-                          'Add New Post',
-                          style: TextStyle(color: Colors.black),
-                        ),
+                    ),
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PostFormScreen()));
+                      },
+                      child: const Text(
+                        'Add New Post',
+                        style: TextStyle(color: Colors.black),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                Flexible(
-                  child: GridView.count(
-                    crossAxisCount: 1,
-                    children: snapshot.data!.docs.map(
-                      (posts) {
-                        return Center(
-                          child: Card(
-                            child: Hero(
-                              tag: Text(posts['Seller Name']),
-                              child: Material(
-                                child: InkWell(
-                                  onTap: () {},
-                                  child: GridTile(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                                      children: [
-                                        Expanded(
-                                          child: Image.network(posts['Thumbnail'])
-                                        ),
-                                        Divider(thickness: 1.5),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    posts['Title'],
-                                                    style: const TextStyle(
-                                                      fontSize: 16,
-                                                    ),
+              ),
+              Flexible(
+                child: GridView.count(
+                  crossAxisCount: 1,
+                  children: snapshot.data!.docs.map(
+                    (posts) {
+                      return Center(
+                        child: Card(
+                          child: Hero(
+                            tag: Text(posts['Seller Name']),
+                            child: Material(
+                              child: InkWell(
+                                onTap: () {},
+                                child: GridTile(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      Expanded(
+                                        child: Image.network(posts['Thumbnail'])
+                                      ),
+                                      Divider(thickness: 1.5),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        children: [
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Text(
+                                                  posts['Title'],
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
                                                   ),
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets.only(
-                                                      left: 8,
-                                                      right: 16,
-                                                      top: 4,
-                                                      bottom: 4),
-                                                  child: Text(
-                                                    'by ' + posts['Seller Name'],
-                                                    style: const TextStyle(
-                                                      color: Colors.black54,
-                                                      fontWeight: FontWeight.w800,
-                                                    ),
-                                                  ),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CommentsScreen(
-                                                      postID: posts['Post ID'],
-                                                    )));
-                                                  },
-                                                  child: const Text('Add Comment'),
-                                                ),
-                                              ],
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
-                                              child: InkWell(
-                                                onTap: () {
-                                                  Navigator.of(context)
-                                                      .pushReplacement(MaterialPageRoute(
-                                                      builder: (context) => VideoScreen(
-                                                        videoURL: posts['URL'],
-                                                        description:
-                                                        posts['Description'],
-                                                      )));
-                                                },
-                                                child: Column(
-                                                  children: [
-                                                    Icon(
-                                                      Icons.info,
-                                                      size: 28.0,
-                                                      color: Colors.red[900],
-                                                    ),
-                                                    Text(
-                                                      'Find out more!',
-                                                      style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.red[900],
-                                                      ),
-                                                    ),
-                                                  ],
                                                 ),
                                               ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 8, right: 16, top: 4, bottom: 4),
+                                                child: Text(
+                                                  'by ' + posts['Seller Name'],
+                                                  style: const TextStyle(
+                                                    color: Colors.black54,
+                                                    fontWeight: FontWeight.w800,
+                                                  ),
+                                                ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CommentsScreen(
+                                                    postID: posts['Post ID'],
+                                                  )));
+                                                },
+                                                child: const Text('Add Comment'),
+                                              ),
+                                            ],
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(right: 8.0, bottom: 16.0),
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => VideoScreen(
+                                                  videoURL: posts['URL'],
+                                                  description: posts['Description'],
+                                                  postID: posts['Post ID'],
+                                                )));
+                                              },
+                                              child: Column(
+                                                children: [
+                                                  Icon(
+                                                    Icons.info,
+                                                    size: 28.0,
+                                                    color: Colors.red[900],
+                                                  ),
+                                                  Text(
+                                                    'Find out more!',
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: Colors.red[900],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                           ),
-                        );
-                      },
-                    ).toList(),
-                  ),
+                        ),
+                      );
+                    },
+                  ).toList(),
                 ),
-                NavigateBar(),
-              ],
-            );
-          },
+              ),
+              NavigateBar(),
+            ],
+          );
+        },
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/post.dart';
 import 'package:video_player/video_player.dart';
@@ -5,8 +6,9 @@ import 'package:video_player/video_player.dart';
 class VideoScreen extends StatefulWidget {
   var videoURL;
   var description;
+  var postID;
 
-  VideoScreen({this.videoURL, this.description});
+  VideoScreen({this.videoURL, this.description, this.postID});
 
   @override
   State<VideoScreen> createState() => _VideoScreenState();
@@ -139,6 +141,38 @@ class _VideoScreenState extends State<VideoScreen> {
                               style: const TextStyle(
                                 fontSize: 16,
                               ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              DocumentReference dr = FirebaseFirestore.instance.collection('posts').doc(widget.postID);
+                              dr.delete();
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) => PostScreen()));
+                            },
+                            child: Column(
+                              children: [
+                                Icon(
+                                  Icons.delete,
+                                  size: 28.0,
+                                  color: Colors.red[900],
+                                ),
+                                Text(
+                                  'Delete Post',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red[900],
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
