@@ -2,15 +2,38 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/login.dart';
-import 'package:seller_app/src/screens/myRequests.dart';
+import 'package:seller_app/src/screens/request.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 import 'package:seller_app/src/widgets/singleRequest.dart';
 
-class RequestScreen extends StatelessWidget {
-  const RequestScreen({Key? key}) : super(key: key);
+class MyRequestsScreen extends StatefulWidget {
+  const MyRequestsScreen({Key? key}) : super(key: key);
 
-  final auth = FirebaseAuth.instance;
+  @override
+  State<MyRequestsScreen> createState() => _MyRequestsScreenState();
+}
+
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? get currentUser => _auth.currentUser;
+}
+
+class _MyRequestsScreenState extends State<MyRequestsScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  String _sellerName = '';
+
+  Future<String> getSellerName() async {
+    final uid = AuthService().currentUser?.uid;
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    setState(() => _sellerName = ds.get('Name'));
+    return _sellerName;
+  }
+
+  String getName() {
+    getSellerName();
+    return _sellerName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +62,7 @@ class RequestScreen extends StatelessWidget {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('requests')
-            .where('Seller Name', isEqualTo: 'null')
+            .where('Seller Name', isEqualTo: getName())
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -55,9 +78,11 @@ class RequestScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RequestScreen()));
+                        },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.amber),
+                          backgroundColor: MaterialStateProperty.all(Colors.orange),
                           shape: MaterialStateProperty.all(
                             const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
@@ -72,11 +97,9 @@ class RequestScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyRequestsScreen()));
-                        },
+                        onPressed: () {},
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.orange),
+                          backgroundColor: MaterialStateProperty.all(Colors.amber),
                           shape: MaterialStateProperty.all(
                             const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
@@ -94,12 +117,12 @@ class RequestScreen extends StatelessWidget {
               ),
               Categories(
                 currentCategory: 'All Requests',
-                currentPage: 'Available Requests',
+                currentPage: 'My Requests',
               ),
               Flexible(
                 child: ListView(
                   children: snapshot.data!.docs.map(
-                    (requests) {
+                        (requests) {
                       return SingleRequest(
                         buyerName: requests['Buyer Name'],
                         sellerName: requests['Seller Name'],

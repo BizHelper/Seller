@@ -88,6 +88,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
               ),
               Categories(
                 currentCategory: widget.currentCategory,
+                currentPage: 'Home',
               ),
               Flexible(
                 child: GridView.count(

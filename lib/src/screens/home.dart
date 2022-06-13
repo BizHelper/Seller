@@ -84,6 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Categories(
                 currentCategory: 'All Products',
+                currentPage: 'Home',
               ),
               Flexible(
                 child: GridView.count(
