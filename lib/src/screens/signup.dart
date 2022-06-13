@@ -20,6 +20,36 @@ class _SignupScreenState extends State<SignupScreen> {
   final auth = FirebaseAuth.instance;
   FirebaseFirestore fstore = FirebaseFirestore.instance;
 
+  Future<bool> checkUsername(String username) async {
+    final result = await FirebaseFirestore.instance.collection('sellers')
+        .where('Name', isEqualTo: _shopName)
+        .get();
+    return result.docs.isEmpty;
+  }
+
+  showAlertDialog(BuildContext context) {
+    AlertDialog dialog = AlertDialog(
+      title: Text(
+        'Shop Name has been taken',
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('OK'),
+        ),
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return dialog;
+      }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,8 +123,14 @@ class _SignupScreenState extends State<SignupScreen> {
                   style: ButtonStyle(
                       backgroundColor:
                       MaterialStateProperty.all(Colors.orange[600])),
-                  onPressed: () {
-                    _signup(_email, _password);
+                  onPressed: () async {
+                    final isUnique = await checkUsername(_shopName);
+                    print(isUnique);
+                    if (!isUnique) {
+                      showAlertDialog(context);
+                    } else {
+                      _signup(_email, _password);
+                    }
                   },
                   child: const Text(
                     'Sign up',
