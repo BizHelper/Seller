@@ -123,7 +123,19 @@ class Comment extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Container(width: 50, child: Image.network(profilePic)),
+          Container(
+            width: 35,
+            height: 35,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+              image: DecorationImage(
+                fit: BoxFit.fill,
+                image: Image.network(profilePic).image,
+              ),
+            ),
+            //child: Image.network(profilePic),
+          ),
           Text(
             "  " + name,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
