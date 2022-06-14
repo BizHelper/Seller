@@ -29,13 +29,6 @@ class ProductDescriptionScreen extends StatelessWidget {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.cyan.shade900,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => HomeScreen()));
-          },
-        ),
         title: const Text(
           'Product Description',
           style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold),
@@ -45,16 +38,11 @@ class ProductDescriptionScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    height: 300,
-                    child: Image.network(this.productDetailImages),
-                  ),
-                ],
+              SizedBox(
+                height: 300,
+                child: Image.network(this.productDetailImages),
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -83,11 +71,16 @@ class ProductDescriptionScreen extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'by: $productDetailShopName',
-                  style: const TextStyle(
-                    fontSize: 15,
-                  ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      'by: $productDetailShopName',
+                      style: const TextStyle(
+                        fontSize: 15,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(

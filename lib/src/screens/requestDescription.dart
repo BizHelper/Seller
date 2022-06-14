@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/firebaseService.dart';
+import 'package:seller_app/src/screens/chatConversation.dart';
 import 'package:seller_app/src/screens/myRequests.dart';
-import 'package:seller_app/src/screens/request.dart';
 
 class RequestDescriptionScreen extends StatefulWidget {
   var buyerName;
+  var buyerID;
   var sellerName;
   var category;
   var deadline;
@@ -16,6 +18,7 @@ class RequestDescriptionScreen extends StatefulWidget {
 
   RequestDescriptionScreen({
     this.buyerName,
+    this.buyerID,
     this.sellerName,
     this.category,
     this.deadline,
@@ -36,7 +39,44 @@ class AuthService {
 
 class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
   final FirebaseAuth auth = FirebaseAuth.instance;
+  final FirebaseService _service = FirebaseService();
+  CollectionReference requests = FirebaseFirestore.instance.collection('requests');
   String _sellerName = '';
+
+  createChatRoom() async {
+    Map <String, dynamic> request = {
+      'buyerName': widget.buyerName,
+      'buyerID': widget.buyerID,
+      'sellerName': widget.sellerName,
+      'category': widget.category,
+      'deadline': widget.deadline,
+      'description': widget.description,
+      'price': widget.price,
+      'title': widget.title,
+      'requestID': widget.requestID,
+    };
+
+    List<String> users = [
+      widget.buyerID,
+      auth.currentUser!.uid
+    ];
+
+    String chatRoomId = '${widget.buyerID}.${auth.currentUser!.uid}.${widget.requestID}';
+
+    Map<String, dynamic> chatData = {
+      'users' : users,
+      'chatRoomId' : chatRoomId,
+      'request' : request,
+      'lastChat' : null,
+      'lastChatTime' : DateTime.now().microsecondsSinceEpoch,
+    };
+
+    _service.createRequestChatRoom(
+      chatData: chatData,
+    );
+
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => ChatConversations(chatRoomId: chatRoomId, type: 'requests')));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +85,6 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.cyan.shade900,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_rounded),
-          onPressed: () {
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => RequestScreen()));
-          },
-        ),
         title: const Text(
           'Request Description',
           style: TextStyle(fontSize: 23.0, fontWeight: FontWeight.bold),
@@ -68,13 +101,16 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.title,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
+                    SizedBox(width: 30),
                     Text(
                       '\$' + widget.price,
                       style: const TextStyle(
@@ -172,7 +208,33 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                   ],
                 ),
               ) :
-              Container(),
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    InkWell(
+                      onTap: createChatRoom,
+                      child: Column(
+                        children: const [
+                          Icon(
+                            Icons.chat,
+                            size: 28.0,
+                            color: Colors.blue,
+                          ),
+                          Text(
+                            'Chat',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

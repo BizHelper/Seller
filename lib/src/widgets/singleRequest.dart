@@ -3,6 +3,7 @@ import 'package:seller_app/src/screens/requestDescription.dart';
 
 class SingleRequest extends StatelessWidget {
   var buyerName;
+  var buyerID;
   var sellerName;
   var category;
   var deadline;
@@ -13,6 +14,7 @@ class SingleRequest extends StatelessWidget {
 
   SingleRequest({
     this.buyerName,
+    this.buyerID,
     this.sellerName,
     this.category,
     this.deadline,
@@ -45,8 +47,9 @@ class SingleRequest extends StatelessWidget {
         ),
         trailing: InkWell(
           onTap: () {
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => RequestDescriptionScreen(
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestDescriptionScreen(
               buyerName: buyerName,
+              buyerID: buyerID,
               sellerName: sellerName,
               category: category,
               deadline: deadline,

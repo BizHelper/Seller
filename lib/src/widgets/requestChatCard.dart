@@ -3,23 +3,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/firebaseService.dart';
 import 'package:seller_app/src/screens/chatConversation.dart';
-import 'package:seller_app/src/screens/productDescription.dart';
+import 'package:seller_app/src/screens/requestDescription.dart';
 
-class ChatCard extends StatefulWidget {
+class RequestChatCard extends StatefulWidget {
   final Map<String, dynamic> chatData;
-  ChatCard(this.chatData);
+  RequestChatCard(this.chatData);
 
   @override
-  State<ChatCard> createState() => _ChatCardState();
+  State<RequestChatCard> createState() => _RequestChatCardState();
 }
 
-class _ChatCardState extends State<ChatCard> {
+class _RequestChatCardState extends State<RequestChatCard> {
   FirebaseService _service = FirebaseService();
   DocumentSnapshot? doc;
-  CollectionReference listings = FirebaseFirestore.instance.collection('listings');
+  CollectionReference requests = FirebaseFirestore.instance.collection('requests');
 
-  getProductDetails() {
-    _service.getProductDetails(widget.chatData['product']['productDetailId']).then((value){
+  getRequestDetails() {
+    _service.getRequestDetails(widget.chatData['request']['requestID']).then((value){
       setState((){
         doc = value;
       });
@@ -27,7 +27,7 @@ class _ChatCardState extends State<ChatCard> {
   }
   @override
   Widget build(BuildContext context) {
-    getProductDetails();
+    getRequestDetails();
     return doc == null?
     Container(): Container(
       decoration: const BoxDecoration(
@@ -38,29 +38,30 @@ class _ChatCardState extends State<ChatCard> {
           Navigator.push (
             context,
             MaterialPageRoute (
-              builder: (BuildContext context) =>  ChatConversations(chatRoomId: widget.chatData['chatRoomId'], type: 'listings'),
+              builder: (BuildContext context) =>  ChatConversations(chatRoomId: widget.chatData['chatRoomId'], type: 'requests'),
             ),
           );
         },
-        leading: SizedBox(child: Image.network(doc!['Image URL'], height: 50, width: 50)),
-        title: Text(doc!['Name']),
+        leading: Text('leading'),
+        title: Text('title'),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('\$' + doc!['Price'], maxLines: 1),
+            Text('subtitle'),
           ],
         ),
         trailing: InkWell(
           onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDescriptionScreen(
-              productDetailName: widget.chatData['product']['productDetailName'],
-              productDetailShopName: widget.chatData['product']['productDetailShopName'],
-              productDetailPrice: widget.chatData['product']['productDetailPrice'],
-              productDetailCategory: widget.chatData['product']['productDetailCategory'],
-              productDetailDescription: widget.chatData['product']['productDetailDescription'],
-              productDetailImages: widget.chatData['product']['productDetailImages'],
-              productID: widget.chatData['product']['productID'],
-              sellerID: widget.chatData['product']['sellerID'],
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestDescriptionScreen(
+              buyerID: widget.chatData['request']['buyerID'],
+              buyerName: widget.chatData['request']['buyerName'],
+              category: widget.chatData['request']['category'],
+              deadline: widget.chatData['request']['deadline'],
+              description: widget.chatData['request']['description'],
+              price: widget.chatData['request']['price'],
+              requestID: widget.chatData['request']['requestID'],
+              sellerName: widget.chatData['request']['sellerName'],
+              title: widget.chatData['request']['title'],
             )));
           },
           child: Padding(
@@ -73,7 +74,7 @@ class _ChatCardState extends State<ChatCard> {
                   color: Colors.red[900],
                 ),
                 Text(
-                  'View Listing',
+                  'View Request',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 12,

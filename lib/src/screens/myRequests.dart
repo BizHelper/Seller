@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/request.dart';
+import 'package:seller_app/src/screens/requestChat.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 import 'package:seller_app/src/widgets/singleRequest.dart';
@@ -43,6 +44,13 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
         backgroundColor: Colors.cyan[900],
         centerTitle: true,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.chat),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => RequestChatScreen()));
+            },
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
@@ -125,6 +133,7 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
                         (requests) {
                       return SingleRequest(
                         buyerName: requests['Buyer Name'],
+                        buyerID: requests['Buyer ID'],
                         sellerName: requests['Seller Name'],
                         category: requests['Category'],
                         deadline: requests['Deadline'],

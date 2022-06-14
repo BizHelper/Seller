@@ -141,7 +141,12 @@ class Comment extends StatelessWidget {
             "  " + name,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
-          Text("  " + comment, style: TextStyle(fontSize: 15)),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(comment, style: TextStyle(fontSize: 15)),
+            ),
+          ),
         ],
       ),
     );

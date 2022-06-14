@@ -9,7 +9,8 @@ import 'package:seller_app/src/firebaseService.dart';
 
 class ChatConversations extends StatefulWidget {
   final String chatRoomId;
-  ChatConversations({required this.chatRoomId});
+  final String type;
+  ChatConversations({required this.chatRoomId, required this.type});
 
   @override
   State<ChatConversations> createState() => _ChatConversationsState();
@@ -28,7 +29,11 @@ class _ChatConversationsState extends State<ChatConversations> {
         'sentBy': _auth.currentUser!.uid,
         'time': DateTime.now().microsecondsSinceEpoch,
       };
-      _service.createChat(widget.chatRoomId, message);
+      if (widget.type == 'listings') {
+        _service.createChat(widget.chatRoomId, message);
+      } else {
+        _service.createRequestChat(widget.chatRoomId, message);
+      }
       chatMessageController.clear();
     }
   }
@@ -37,12 +42,21 @@ class _ChatConversationsState extends State<ChatConversations> {
 
   @override
   void initState() {
-    _service.getChat(widget.chatRoomId).then((value) {
-      setState(() {
-        chatMessageStream = value;
+    if (widget.type == 'listings') {
+      _service.getChat(widget.chatRoomId).then((value) {
+        setState(() {
+          chatMessageStream = value;
+        });
       });
-    });
-    super.initState();
+      super.initState();
+    } else {
+      _service.getRequestChat(widget.chatRoomId).then((value) {
+        setState(() {
+          chatMessageStream = value;
+        });
+      });
+      super.initState();
+    }
   }
 
   @override
@@ -68,9 +82,11 @@ class _ChatConversationsState extends State<ChatConversations> {
                     return Container();
                   }
                   return ListView.builder(
+                    reverse: true,
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      String sentBy = snapshot.data!.docs[index]['sentBy'];
+                      int reverseIndex = snapshot.data!.docs.length - 1 - index;
+                      String sentBy = snapshot.data!.docs[reverseIndex]['sentBy'];
                       String me = _auth.currentUser!.uid;
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -87,7 +103,7 @@ class _ChatConversationsState extends State<ChatConversations> {
                                       ? BubbleType.sendBubble
                                       : BubbleType.receiverBubble),
                               child:
-                                  Text(snapshot.data!.docs[index]['message']),
+                                  Text(snapshot.data!.docs[reverseIndex]['message']),
                             ),
                           ],
                         ),

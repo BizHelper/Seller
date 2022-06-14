@@ -5,7 +5,6 @@ import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
 class ListingScreen extends StatelessWidget {
-  const ListingScreen({Key? key}) : super(key: key);
 
   final auth = FirebaseAuth.instance;
 

@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/myRequests.dart';
+import 'package:seller_app/src/screens/requestChat.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 import 'package:seller_app/src/widgets/singleRequest.dart';
 
 class RequestScreen extends StatelessWidget {
-  const RequestScreen({Key? key}) : super(key: key);
 
   final auth = FirebaseAuth.instance;
 
@@ -20,6 +20,13 @@ class RequestScreen extends StatelessWidget {
         backgroundColor: Colors.cyan[900],
         centerTitle: true,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.chat),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => RequestChatScreen()));
+            },
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
@@ -102,6 +109,7 @@ class RequestScreen extends StatelessWidget {
                     (requests) {
                       return SingleRequest(
                         buyerName: requests['Buyer Name'],
+                        buyerID: requests['Buyer ID'],
                         sellerName: requests['Seller Name'],
                         category: requests['Category'],
                         deadline: requests['Deadline'],
