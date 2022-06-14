@@ -155,6 +155,7 @@ class _SignupScreenState extends State<SignupScreen> {
       DocumentReference documentReference = fstore.collection("sellers").doc(userID);
       Map<String, Object> user = new HashMap();
       user.putIfAbsent('Name', () => _shopName);
+      user.putIfAbsent('Seller ID', () => userID);
       documentReference.set(user);
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => VerifyScreen()));

@@ -37,6 +37,7 @@ class _ListingFormState extends State<ListingForm> {
   final db = FirebaseFirestore.instance;
 
   late String _sellerName;
+  late String _sellerID;
   late String _currentName;
   late String _currentURL;
   late String _currentPrice;
@@ -227,6 +228,7 @@ class _ListingFormState extends State<ListingForm> {
                     final uid = AuthService().currentUser?.uid;
                     DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
                     _sellerName = ds.get('Name');
+                    _sellerID = ds.get('Seller ID');
                     DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc();
                     Map<String, Object> listing = new HashMap();
                     listing.putIfAbsent('Name', () => _currentName);
@@ -236,6 +238,7 @@ class _ListingFormState extends State<ListingForm> {
                     listing.putIfAbsent('Description', () => _currentDescription);
                     listing.putIfAbsent('Listing ID', () => dr.id);
                     listing.putIfAbsent('Seller Name', () => _sellerName);
+                    listing.putIfAbsent('Seller Id', () => _sellerID);
                     dr.set(listing);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ListingScreen()));
                   }
