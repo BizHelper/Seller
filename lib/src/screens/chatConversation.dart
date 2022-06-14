@@ -20,6 +20,7 @@ class _ChatConversationsState extends State<ChatConversations> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   var chatMessageController = TextEditingController();
   bool _send = false;
+
   sendMessage() {
     if (chatMessageController.text.isNotEmpty) {
       Map<String, dynamic> message = {
@@ -47,11 +48,17 @@ class _ChatConversationsState extends State<ChatConversations> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-        child: Stack(
-          children: [
-            Padding(
+      backgroundColor: Colors.blueGrey[50],
+      appBar: AppBar(
+        backgroundColor: Colors.cyan.shade900,
+        title: const Text('Chats', style: TextStyle(color: Colors.white)),
+        centerTitle: true,
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Flexible(
+            child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder(
                 stream: chatMessageStream,
@@ -82,7 +89,6 @@ class _ChatConversationsState extends State<ChatConversations> {
                               child:
                                   Text(snapshot.data!.docs[index]['message']),
                             ),
-                            //    Text(lastChatDate),
                           ],
                         ),
                       );
@@ -91,54 +97,52 @@ class _ChatConversationsState extends State<ChatConversations> {
                 },
               ),
             ),
-            Container(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border(top: BorderSide(color: Colors.grey.shade800)),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                          child: TextField(
-                              controller: chatMessageController,
-                              style: TextStyle(color: Colors.blue),
-                              decoration: const InputDecoration(
-                                  hintText: 'Type Message',
-                                  hintStyle: TextStyle(color: Colors.black),
-                                  border: InputBorder.none),
-                              onChanged: (value) {
-                                if (value.isNotEmpty) {
-                                  setState(() {
-                                    _send = true;
-                                  });
-                                } else {
-                                  setState(() {
-                                    _send = false;
-                                  });
-                                }
-                              },
-                              onSubmitted: (value) {
-                                if (value.length > 0) {
-                                  sendMessage();
-                                }
-                              })),
-                      Visibility(
-                        visible: _send,
-                        child: IconButton(
-                          icon: Icon(Icons.send),
-                          onPressed: sendMessage,
-                        ),
-                      ),
-                    ],
+          ),
+          Container(
+            decoration: BoxDecoration(
+              border: Border(top: BorderSide(color: Colors.grey.shade800)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                        controller: chatMessageController,
+                        style: TextStyle(color: Colors.blue),
+                        decoration: const InputDecoration(
+                            hintText: 'Type Message',
+                            hintStyle: TextStyle(color: Colors.black),
+                            border: InputBorder.none),
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            setState(() {
+                              _send = true;
+                            });
+                          } else {
+                            setState(() {
+                              _send = false;
+                            });
+                          }
+                        },
+                        onSubmitted: (value) {
+                          if (value.length > 0) {
+                            sendMessage();
+                          }
+                        }),
                   ),
-                ),
+                  Visibility(
+                    visible: _send,
+                    child: IconButton(
+                      icon: Icon(Icons.send),
+                      onPressed: sendMessage,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

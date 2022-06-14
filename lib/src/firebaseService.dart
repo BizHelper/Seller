@@ -8,7 +8,6 @@ class FirebaseService {
 
 
   createChatRoom({chatData}) {
-    // need change to  catch error
     messages.doc(chatData['chatRoomId']).set(chatData).catchError((e) {
       print(e.toString());
     });

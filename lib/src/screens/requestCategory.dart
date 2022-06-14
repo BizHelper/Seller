@@ -42,7 +42,7 @@ class _RequestCategoryScreenState extends State<RequestCategoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey[100],
+      backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
         backgroundColor: Colors.cyan[900],
         centerTitle: true,
