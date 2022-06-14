@@ -11,6 +11,7 @@ class ProductDescriptionScreen extends StatelessWidget {
   var productDetailDescription;
   var productDetailImages;
   var productID;
+  var sellerID;
 
   ProductDescriptionScreen(
       {this.productDetailName,
@@ -19,7 +20,8 @@ class ProductDescriptionScreen extends StatelessWidget {
       this.productDetailCategory,
       this.productDetailDescription,
       this.productDetailImages,
-      this.productID});
+      this.productID,
+      this.sellerID});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +46,14 @@ class ProductDescriptionScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 300,
-                child: Image.network(this.productDetailImages),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 300,
+                    child: Image.network(this.productDetailImages),
+                  ),
+                ],
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),

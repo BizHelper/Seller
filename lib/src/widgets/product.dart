@@ -9,6 +9,7 @@ class Product extends StatelessWidget {
   var prodDescription;
   var prodImage;
   var prodID;
+  var sellerID;
 
   Product({
     this.prodName,
@@ -17,7 +18,8 @@ class Product extends StatelessWidget {
     this.prodCategory,
     this.prodDescription,
     this.prodImage,
-    this.prodID
+    this.prodID,
+    this.sellerID
   });
 
   @override

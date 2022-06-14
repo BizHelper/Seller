@@ -148,8 +148,7 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                         _sellerName = ds.get('Name');
                         DocumentReference dr = FirebaseFirestore.instance.collection('requests').doc(widget.requestID);
                         dr.update({'Seller Name' : _sellerName});
-                        print(_sellerName);
-                        print(widget.requestID);
+                        dr.update({'Accepted' : 'true'});
                         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyRequestsScreen()));
                       },
                       child: Column(

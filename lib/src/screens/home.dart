@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/screens/chat.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
@@ -43,6 +44,13 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.cyan[900],
         centerTitle: true,
         actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.chat),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => ChatScreen()));
+            },
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
@@ -99,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         prodDescription: listings['Description'],
                         prodImage: listings['Image URL'],
                         prodID: listings['Listing ID'],
+                        sellerID: listings['Seller Id'],
                       );
                     },
                   ).toList(),
