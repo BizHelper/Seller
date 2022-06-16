@@ -42,14 +42,9 @@ class _RequestChatCardState extends State<RequestChatCard> {
             ),
           );
         },
-        leading: Text('leading'),
-        title: Text('title'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('subtitle'),
-          ],
-        ),
+        leading: Text(widget.chatData['request']['buyerName']),
+        title: Text(widget.chatData['request']['title']),
+        subtitle: Text('by: ' + widget.chatData['request']['deadline']),
         trailing: InkWell(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestDescriptionScreen(
