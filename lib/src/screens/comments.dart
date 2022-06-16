@@ -28,7 +28,7 @@ class CommentsScreenState extends State<CommentsScreen> {
   buildComments() {
     return StreamBuilder(
         stream:
-            commentRef.doc(widget.postID).collection('comments').snapshots(),
+            commentRef.doc(widget.postID).collection('comments').orderBy('time').snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (!snapshot.hasData) {
@@ -55,6 +55,7 @@ class CommentsScreenState extends State<CommentsScreen> {
         "userId": _auth.currentUser!.uid,
         "name": sellerName,
         "profilePic": profilePic,
+        "time": DateTime.now().microsecondsSinceEpoch,
       },
     );
     commentController.clear();
@@ -124,29 +125,52 @@ class Comment extends StatelessWidget {
     return ListTile(
       title: Row(
         children: [
-          Container(
-            width: 35,
-            height: 35,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white,
-              image: DecorationImage(
-                fit: BoxFit.fill,
-                image: Image.network(profilePic).image,
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Container(
+              width: 35,
+              height: 35,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+                image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: Image.network(profilePic).image,
+                ),
               ),
+              //child: Image.network(profilePic),
             ),
-            //child: Image.network(profilePic),
-          ),
-          Text(
-            "  " + name,
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Text(comment, style: TextStyle(fontSize: 15)),
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  color: Colors.black
+                ),
+                children: <TextSpan> [
+                  TextSpan(
+                    text: name + '  ',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                  TextSpan(
+                    text: comment
+                  ),
+                ],
+              ),
             ),
-          ),
+          )
+          // Text(
+          //   "  " + name,
+          //   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+          // ),
+          // Expanded(
+          //   child: Padding(
+          //     padding: const EdgeInsets.only(left: 8.0),
+          //     child: Text(comment, style: TextStyle(fontSize: 15)),
+          //   ),
+          // ),
         ],
       ),
     );

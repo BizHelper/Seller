@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/screens/completedRequests.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/myRequests.dart';
 import 'package:seller_app/src/screens/request.dart';
@@ -53,6 +54,13 @@ class _RequestCategoryScreenState extends State<RequestCategoryScreen> {
             onPressed: () {
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => RequestChatScreen()));
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.domain_verification),
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => CompletedRequestsScreen()));
             },
           ),
           IconButton(
@@ -161,6 +169,7 @@ class _RequestCategoryScreenState extends State<RequestCategoryScreen> {
                           price: requests['Price'],
                           title: requests['Title'],
                           requestID: requests['Request ID'],
+                          accepted: requests['Accepted'],
                         );
                       },
                     ).toList(),

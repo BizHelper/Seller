@@ -11,6 +11,7 @@ class SingleRequest extends StatelessWidget {
   var price;
   var title;
   var requestID;
+  var accepted;
 
   SingleRequest({
     this.buyerName,
@@ -22,6 +23,7 @@ class SingleRequest extends StatelessWidget {
     this.price,
     this.title,
     this.requestID,
+    this.accepted,
   });
 
   @override
@@ -57,6 +59,7 @@ class SingleRequest extends StatelessWidget {
               price: price,
               title: title,
               requestID: requestID,
+              accepted: accepted,
             )));
           },
           child: Column(

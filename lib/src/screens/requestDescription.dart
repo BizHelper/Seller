@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/firebaseService.dart';
 import 'package:seller_app/src/screens/chatConversation.dart';
-import 'package:seller_app/src/screens/myRequests.dart';
 
 class RequestDescriptionScreen extends StatefulWidget {
   var buyerName;
@@ -15,6 +14,7 @@ class RequestDescriptionScreen extends StatefulWidget {
   var price;
   var title;
   var requestID;
+  var accepted;
 
   RequestDescriptionScreen({
     this.buyerName,
@@ -26,6 +26,7 @@ class RequestDescriptionScreen extends StatefulWidget {
     this.price,
     this.title,
     this.requestID,
+    this.accepted,
   });
 
   @override
@@ -186,7 +187,7 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                         DocumentReference dr = FirebaseFirestore.instance.collection('requests').doc(widget.requestID);
                         dr.update({'Seller Name' : _sellerName});
                         dr.update({'Accepted' : 'true'});
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyRequestsScreen()));
+                        Navigator.pop(context);
                       },
                       child: Column(
                         children: const [
@@ -208,33 +209,64 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                   ],
                 ),
               ) :
+              widget.accepted == 'true' ?
               Padding(
                 padding: const EdgeInsets.only(right: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    InkWell(
-                      onTap: createChatRoom,
-                      child: Column(
-                        children: const [
-                          Icon(
-                            Icons.chat,
-                            size: 28.0,
-                            color: Colors.blue,
-                          ),
-                          Text(
-                            'Chat',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () {
+                          DocumentReference dr = FirebaseFirestore.instance.collection('requests').doc(widget.requestID);
+                          dr.update({'Accepted' : 'completed'});
+                          Navigator.pop(context);
+                        },
+                        child: Column(
+                          children: const [
+                            Icon(
+                              Icons.domain_verification,
+                              size: 28.0,
+                              color: Colors.green,
+                            ),
+                            Text(
+                              'Mark Completed',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: createChatRoom,
+                        child: Column(
+                          children: const [
+                            Icon(
+                              Icons.chat,
+                              size: 28.0,
                               color: Colors.blue,
                             ),
-                          ),
-                        ],
+                            Text(
+                              'Chat',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
+              ) :
+              Container(),
             ],
           ),
         ),

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/screens/completedRequests.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/request.dart';
 import 'package:seller_app/src/screens/requestChat.dart';
@@ -52,6 +53,13 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
             },
           ),
           IconButton(
+            icon: Icon(Icons.domain_verification),
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => CompletedRequestsScreen()));
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
               auth.signOut();
@@ -71,6 +79,7 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('requests')
             .where('Seller Name', isEqualTo: getName())
+            .where('Accepted', isEqualTo: 'true')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -141,6 +150,7 @@ class _MyRequestsScreenState extends State<MyRequestsScreen> {
                         price: requests['Price'],
                         title: requests['Title'],
                         requestID: requests['Request ID'],
+                        accepted: requests['Accepted'],
                       );
                     },
                   ).toList(),
