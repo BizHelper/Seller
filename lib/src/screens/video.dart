@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/screens/comments.dart';
 import 'package:seller_app/src/screens/post.dart';
 import 'package:video_player/video_player.dart';
 
@@ -113,6 +114,14 @@ class _VideoScreenState extends State<VideoScreen> {
             Divider(height: 1.5, color: Colors.black),
             const SizedBox(
               height: 20,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => CommentsScreen(
+                  postID: widget.postID,
+                )));
+              },
+              child: const Text('View Comments'),
             ),
             Expanded(
               child: SingleChildScrollView(

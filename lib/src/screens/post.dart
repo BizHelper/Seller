@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_app/src/screens/comments.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/postForm.dart';
 import 'package:seller_app/src/screens/video.dart';
@@ -137,7 +136,7 @@ class _PostScreenState extends State<PostScreen> {
                                                 ),
                                               ),
                                               Padding(
-                                                padding: const EdgeInsets.only(left: 8, right: 16, top: 4, bottom: 4),
+                                                padding: const EdgeInsets.only(left: 8, right: 16, top: 4, bottom: 8),
                                                 child: Text(
                                                   'by ' + posts['Seller Name'],
                                                   style: const TextStyle(
@@ -145,14 +144,6 @@ class _PostScreenState extends State<PostScreen> {
                                                     fontWeight: FontWeight.w800,
                                                   ),
                                                 ),
-                                              ),
-                                              TextButton(
-                                                onPressed: () {
-                                                  Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => CommentsScreen(
-                                                    postID: posts['Post ID'],
-                                                  )));
-                                                },
-                                                child: const Text('Add Comment'),
                                               ),
                                             ],
                                           ),
