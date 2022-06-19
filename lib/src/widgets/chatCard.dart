@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/chatConversation.dart';
@@ -12,6 +13,19 @@ class ChatCard extends StatefulWidget {
 }
 
 class _ChatCardState extends State<ChatCard> {
+  String deleted = '';
+
+  Future<String> del() async {
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('listings').doc(widget.chatData['product']['productDetailId']).get();
+    setState(() => deleted = ds.get('Deleted'));
+    return deleted;
+  }
+
+  String getDeleted() {
+    del();
+    return deleted;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -41,6 +55,14 @@ class _ChatCardState extends State<ChatCard> {
           children: [
             Text('\$' + widget.chatData['product']['productDetailPrice'],
                 maxLines: 1),
+            getDeleted() == 'true' ?
+                const Text(
+                  '[DELETED]',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ) :
+                Container(),
           ],
         ),
         trailing: InkWell(
@@ -53,9 +75,9 @@ class _ChatCardState extends State<ChatCard> {
                       productDetailCategory: widget.chatData['product']['productDetailCategory'],
                       productDetailDescription: widget.chatData['product']['productDetailDescription'],
                       productDetailImages: widget.chatData['product']['productDetailImages'],
-                      productID: widget.chatData['product']['productID'],
-                      sellerID: widget.chatData['product']['sellerID'],
-                      iconButtons: false,
+                      productID: widget.chatData['product']['productDetailId'],
+                      sellerID: widget.chatData['product']['sellerId'],
+                      deleted: getDeleted(),
                     )));
           },
           child: Padding(

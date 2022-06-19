@@ -71,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('listings')
             .where('Seller Name', isEqualTo: getName())
+            .where('Deleted', isEqualTo: 'false')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -108,6 +109,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         prodImage: listings['Image URL'],
                         prodID: listings['Listing ID'],
                         sellerID: listings['Seller Id'],
+                        deleted: listings['Deleted'],
                       );
                     },
                   ).toList(),

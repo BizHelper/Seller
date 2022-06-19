@@ -12,7 +12,7 @@ class ProductDescriptionScreen extends StatelessWidget {
   var productDetailImages;
   var productID;
   var sellerID;
-  var iconButtons;
+  var deleted;
 
   ProductDescriptionScreen(
       {this.productDetailName,
@@ -23,7 +23,7 @@ class ProductDescriptionScreen extends StatelessWidget {
       this.productDetailImages,
       this.productID,
       this.sellerID,
-      required this.iconButtons});
+      required this.deleted});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,7 +117,13 @@ class ProductDescriptionScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              iconButtons ?
+              deleted == 'true'?
+                  const Text(
+                    '[DELETED]',
+                    style: TextStyle(
+                      color: Colors.red
+                    ),
+                  ) :
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -126,7 +132,7 @@ class ProductDescriptionScreen extends StatelessWidget {
                     InkWell(
                       onTap: () {
                         DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc(productID);
-                        dr.delete();
+                        dr.update({'Deleted' : 'true'});
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) => HomeScreen()));
                       },
@@ -149,8 +155,7 @@ class ProductDescriptionScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ) :
-              Container(),
+              ),
             ],
           ),
         ),

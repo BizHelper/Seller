@@ -10,6 +10,7 @@ class Product extends StatelessWidget {
   var prodImage;
   var prodID;
   var sellerID;
+  var deleted;
 
   Product({
     this.prodName,
@@ -19,7 +20,8 @@ class Product extends StatelessWidget {
     this.prodDescription,
     this.prodImage,
     this.prodID,
-    this.sellerID
+    this.sellerID,
+    required this.deleted,
   });
 
   @override
@@ -39,7 +41,7 @@ class Product extends StatelessWidget {
                   productDetailDescription: prodDescription,
                   productDetailImages: prodImage,
                   productID: prodID,
-                  iconButtons: true,
+                  deleted: deleted,
                 )));
               },
               child: GridTile(
