@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_app/src/firebaseService.dart';
 import 'package:seller_app/src/screens/chatConversation.dart';
 import 'package:seller_app/src/screens/requestDescription.dart';
 
@@ -14,22 +12,10 @@ class RequestChatCard extends StatefulWidget {
 }
 
 class _RequestChatCardState extends State<RequestChatCard> {
-  FirebaseService _service = FirebaseService();
-  DocumentSnapshot? doc;
-  CollectionReference requests = FirebaseFirestore.instance.collection('requests');
-
-  getRequestDetails() {
-    _service.getRequestDetails(widget.chatData['request']['requestID']).then((value){
-      setState((){
-        doc = value;
-      });
-    });
-  }
   @override
   Widget build(BuildContext context) {
-    getRequestDetails();
-    return doc == null?
-    Container(): Container(
+
+    return Container(
       decoration: const BoxDecoration(
           border: Border(bottom: BorderSide(color: Colors.grey), )
       ),
