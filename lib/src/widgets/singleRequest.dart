@@ -60,6 +60,7 @@ class SingleRequest extends StatelessWidget {
               title: title,
               requestID: requestID,
               accepted: accepted,
+              iconButton: true,
             )));
           },
           child: Column(

@@ -43,6 +43,7 @@ class _RequestChatCardState extends State<RequestChatCard> {
               requestID: widget.chatData['request']['requestID'],
               sellerName: widget.chatData['request']['sellerName'],
               title: widget.chatData['request']['title'],
+              iconButton: false,
             )));
           },
           child: Padding(

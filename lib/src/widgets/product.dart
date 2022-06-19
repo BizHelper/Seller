@@ -39,6 +39,7 @@ class Product extends StatelessWidget {
                   productDetailDescription: prodDescription,
                   productDetailImages: prodImage,
                   productID: prodID,
+                  iconButtons: true,
                 )));
               },
               child: GridTile(

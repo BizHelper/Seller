@@ -12,6 +12,7 @@ class ProductDescriptionScreen extends StatelessWidget {
   var productDetailImages;
   var productID;
   var sellerID;
+  var iconButtons;
 
   ProductDescriptionScreen(
       {this.productDetailName,
@@ -21,7 +22,8 @@ class ProductDescriptionScreen extends StatelessWidget {
       this.productDetailDescription,
       this.productDetailImages,
       this.productID,
-      this.sellerID});
+      this.sellerID,
+      required this.iconButtons});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,6 +117,7 @@ class ProductDescriptionScreen extends StatelessWidget {
                   ],
                 ),
               ),
+              iconButtons ?
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -146,7 +149,8 @@ class ProductDescriptionScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-              ),
+              ) :
+              Container(),
             ],
           ),
         ),

@@ -47,20 +47,15 @@ class _ChatCardState extends State<ChatCard> {
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (context) => ProductDescriptionScreen(
-                      productDetailName: widget.chatData['product']
-                          ['productDetailName'],
-                      productDetailShopName: widget.chatData['product']
-                          ['productDetailShopName'],
-                      productDetailPrice: widget.chatData['product']
-                          ['productDetailPrice'],
-                      productDetailCategory: widget.chatData['product']
-                          ['productDetailCategory'],
-                      productDetailDescription: widget.chatData['product']
-                          ['productDetailDescription'],
-                      productDetailImages: widget.chatData['product']
-                          ['productDetailImages'],
+                      productDetailName: widget.chatData['product']['productDetailName'],
+                      productDetailShopName: widget.chatData['product']['productDetailShopName'],
+                      productDetailPrice: widget.chatData['product']['productDetailPrice'],
+                      productDetailCategory: widget.chatData['product']['productDetailCategory'],
+                      productDetailDescription: widget.chatData['product']['productDetailDescription'],
+                      productDetailImages: widget.chatData['product']['productDetailImages'],
                       productID: widget.chatData['product']['productID'],
                       sellerID: widget.chatData['product']['sellerID'],
+                      iconButtons: false,
                     )));
           },
           child: Padding(
