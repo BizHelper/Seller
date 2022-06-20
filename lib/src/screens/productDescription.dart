@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:seller_app/src/screens/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -133,8 +132,7 @@ class ProductDescriptionScreen extends StatelessWidget {
                       onTap: () {
                         DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc(productID);
                         dr.update({'Deleted' : 'true'});
-                        Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => HomeScreen()));
+                        Navigator.of(context).pop();
                       },
                       child: Column(
                         children: [

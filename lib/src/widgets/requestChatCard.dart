@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/chatConversation.dart';
@@ -12,6 +13,19 @@ class RequestChatCard extends StatefulWidget {
 }
 
 class _RequestChatCardState extends State<RequestChatCard> {
+  String deleted = '';
+
+  Future<String> del() async {
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('requests').doc(widget.chatData['request']['requestID']).get();
+    setState(() => deleted = ds.get('Deleted'));
+    return deleted;
+  }
+
+  String getDeleted() {
+    del();
+    return deleted;
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -30,7 +44,22 @@ class _RequestChatCardState extends State<RequestChatCard> {
         },
         leading: Text(widget.chatData['request']['buyerName']),
         title: Text(widget.chatData['request']['title']),
-        subtitle: Text('by: ' + widget.chatData['request']['deadline']),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'by: ' + widget.chatData['request']['deadline']
+            ),
+            getDeleted() == 'true' ?
+            const Text(
+              '[DELETED]',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ) :
+            Container(),
+          ],
+        ),
         trailing: InkWell(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => RequestDescriptionScreen(
@@ -44,6 +73,7 @@ class _RequestChatCardState extends State<RequestChatCard> {
               sellerName: widget.chatData['request']['sellerName'],
               title: widget.chatData['request']['title'],
               iconButton: false,
+              deleted: getDeleted(),
             )));
           },
           child: Padding(

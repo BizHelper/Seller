@@ -50,6 +50,7 @@ class _CompletedRequestsScreenState extends State<CompletedRequestsScreen> {
           stream: FirebaseFirestore.instance.collection('requests')
               .where('Seller Name', isEqualTo: getName())
               .where('Accepted', isEqualTo: 'completed')
+              .where('Deleted', isEqualTo: 'false')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
@@ -74,6 +75,7 @@ class _CompletedRequestsScreenState extends State<CompletedRequestsScreen> {
                           title: requests['Title'],
                           requestID: requests['Request ID'],
                           accepted: requests['Accepted'],
+                          deleted: requests['Deleted'],
                         );
                       },
                     ).toList(),

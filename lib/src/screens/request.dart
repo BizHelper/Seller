@@ -55,6 +55,7 @@ class RequestScreen extends StatelessWidget {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('requests')
             .where('Seller Name', isEqualTo: 'null')
+            .where('Deleted', isEqualTo: 'false')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
@@ -125,6 +126,7 @@ class RequestScreen extends StatelessWidget {
                         price: requests['Price'],
                         title: requests['Title'],
                         requestID: requests['Request ID'],
+                        deleted: requests['Deleted'],
                       );
                     },
                   ).toList(),

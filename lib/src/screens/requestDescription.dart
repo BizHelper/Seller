@@ -16,6 +16,7 @@ class RequestDescriptionScreen extends StatefulWidget {
   var requestID;
   var accepted;
   var iconButton;
+  var deleted;
 
   RequestDescriptionScreen({
     this.buyerName,
@@ -29,6 +30,7 @@ class RequestDescriptionScreen extends StatefulWidget {
     this.requestID,
     this.accepted,
     required this.iconButton,
+    required this.deleted,
   });
 
   @override
@@ -57,6 +59,7 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
       'price': widget.price,
       'title': widget.title,
       'requestID': widget.requestID,
+      'deleted' : widget.deleted,
     };
 
     List<String> users = [
@@ -175,6 +178,18 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                   ],
                 ),
               ),
+              widget.deleted == 'true' ?
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text(
+                    '[DELETED]',
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ) :
               widget.iconButton ?
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -300,126 +315,7 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                   Container(),
                 ],
               ) :
-                  Container(),
-              // widget.sellerName == 'null' ?
-              // Padding(
-              //   padding: const EdgeInsets.all(8.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.all(8.0),
-              //         child: InkWell(
-              //           onTap: () async {
-              //             final uid = AuthService().currentUser?.uid;
-              //             DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
-              //             _sellerName = ds.get('Name');
-              //             DocumentReference dr = FirebaseFirestore.instance.collection('requests').doc(widget.requestID);
-              //             dr.update({'Seller Name' : _sellerName});
-              //             dr.update({'Accepted' : 'true'});
-              //             Navigator.pop(context);
-              //           },
-              //           child: Column(
-              //             children: const [
-              //               Icon(
-              //                 Icons.add_task,
-              //                 size: 28.0,
-              //                 color: Colors.green,
-              //               ),
-              //               Text(
-              //                 'Accept Request',
-              //                 style: TextStyle(
-              //                   fontWeight: FontWeight.bold,
-              //                   color: Colors.green,
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.all(8.0),
-              //         child: InkWell(
-              //           onTap: createChatRoom,
-              //           child: Column(
-              //             children: const [
-              //               Icon(
-              //                 Icons.chat,
-              //                 size: 28.0,
-              //                 color: Colors.blue,
-              //               ),
-              //               Text(
-              //                 'Chat',
-              //                 style: TextStyle(
-              //                   fontWeight: FontWeight.bold,
-              //                   color: Colors.blue,
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ) :
-              // widget.accepted == 'true' ?
-              // Padding(
-              //   padding: const EdgeInsets.only(right: 16.0),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.end,
-              //     children: [
-              //       Padding(
-              //         padding: const EdgeInsets.all(8.0),
-              //         child: InkWell(
-              //           onTap: () {
-              //             DocumentReference dr = FirebaseFirestore.instance.collection('requests').doc(widget.requestID);
-              //             dr.update({'Accepted' : 'completed'});
-              //             Navigator.pop(context);
-              //           },
-              //           child: Column(
-              //             children: const [
-              //               Icon(
-              //                 Icons.domain_verification,
-              //                 size: 28.0,
-              //                 color: Colors.green,
-              //               ),
-              //               Text(
-              //                 'Mark Completed',
-              //                 style: TextStyle(
-              //                   fontWeight: FontWeight.bold,
-              //                   color: Colors.green,
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       Padding(
-              //         padding: const EdgeInsets.all(8.0),
-              //         child: InkWell(
-              //           onTap: createChatRoom,
-              //           child: Column(
-              //             children: const [
-              //               Icon(
-              //                 Icons.chat,
-              //                 size: 28.0,
-              //                 color: Colors.blue,
-              //               ),
-              //               Text(
-              //                 'Chat',
-              //                 style: TextStyle(
-              //                   fontWeight: FontWeight.bold,
-              //                   color: Colors.blue,
-              //                 ),
-              //               ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ) :
-              // Container(),
+              Container(),
             ],
           ),
         ),

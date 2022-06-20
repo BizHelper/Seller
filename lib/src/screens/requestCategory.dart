@@ -85,10 +85,12 @@ class _RequestCategoryScreenState extends State<RequestCategoryScreen> {
             FirebaseFirestore.instance.collection('requests')
               .where('Category', isEqualTo: widget.currentCategory)
               .where('Seller Name', isEqualTo: 'null')
+              .where('Deleted', isEqualTo: 'false')
               .snapshots() :
             FirebaseFirestore.instance.collection('requests')
               .where('Category', isEqualTo: widget.currentCategory)
               .where('Seller Name', isEqualTo: getName())
+              .where('Deleted', isEqualTo: 'false')
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
@@ -170,6 +172,7 @@ class _RequestCategoryScreenState extends State<RequestCategoryScreen> {
                           title: requests['Title'],
                           requestID: requests['Request ID'],
                           accepted: requests['Accepted'],
+                          deleted: requests['Deleted'],
                         );
                       },
                     ).toList(),
