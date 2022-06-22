@@ -49,10 +49,14 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
   String _sellerName = '';
 
   createChatRoom() async {
+    final uid = AuthService().currentUser?.uid;
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    _sellerName = ds.get('Name');
+
     Map <String, dynamic> request = {
       'buyerName': widget.buyerName,
       'buyerID': widget.buyerID,
-      'sellerName': widget.sellerName,
+      'sellerName': _sellerName,
       'category': widget.category,
       'deadline': widget.deadline,
       'description': widget.description,
