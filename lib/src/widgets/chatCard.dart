@@ -49,10 +49,11 @@ class _ChatCardState extends State<ChatCard> {
                 widget.chatData['product']['productDetailImages'],
                 height: 50,
                 width: 50)),
-        title: Text(widget.chatData['product']['productDetailName']),
+        title: Text(widget.chatData['product']['buyerName']),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(widget.chatData['product']['productDetailName']),
             Text('\$' + widget.chatData['product']['productDetailPrice'],
                 maxLines: 1),
             getDeleted() == 'true' ?
