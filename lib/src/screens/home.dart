@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/chat.dart';
 import 'package:seller_app/src/screens/login.dart';
@@ -17,14 +16,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
 class _HomeScreenState extends State<HomeScreen> {
-
-  final FirebaseAuth auth = FirebaseAuth.instance;
   String _sellerName = '';
 
   Future<String> getSellerName() async {
@@ -57,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              auth.signOut();
+              AuthService().auth.signOut();
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             },

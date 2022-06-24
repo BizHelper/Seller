@@ -43,7 +43,6 @@ class _RequestChatCardState extends State<RequestChatCard> {
           );
         },
         title: Text(widget.chatData['request']['buyerName']),
-        //title: Text(widget.chatData['request']['title']),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

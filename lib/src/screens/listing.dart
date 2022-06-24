@@ -1,13 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/widgets/listingForm.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
 class ListingScreen extends StatelessWidget {
-
-  final auth = FirebaseAuth.instance;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +16,7 @@ class ListingScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              auth.signOut();
+              AuthService().auth.signOut();
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             },
@@ -37,7 +34,7 @@ class ListingScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Expanded(
+          Expanded(
             child: SingleChildScrollView(
               child: Padding(
                   padding: EdgeInsets.all(8.0),

@@ -6,7 +6,6 @@ import 'package:seller_app/src/screens/request.dart';
 import 'package:seller_app/src/screens/post.dart';
 
 class NavigateBar extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Column(

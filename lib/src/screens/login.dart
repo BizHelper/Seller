@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:seller_app/src/services/auth.dart';
 import 'package:seller_app/src/screens/home.dart';
 import 'package:seller_app/src/screens/reset.dart';
 import 'package:seller_app/src/screens/signup.dart';
+import 'package:seller_app/src/services/authService.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -16,7 +16,6 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   var _email;
   var _password;
-  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(hintText: 'Email'),
                 onChanged: (value) {
-                  setState(() {
-                    _email = value.trim();
-                  });
+                  setState(() => _email = value.trim());
                 },
               ),
             ),
@@ -67,9 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: true,
                 decoration: InputDecoration(hintText: 'Password'),
                 onChanged: (value) {
-                  setState(() {
-                    _password = value.trim();
-                  });
+                  setState(() => _password = value.trim());
                 },
               ),
             ),
@@ -82,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         MaterialStateProperty.all(Colors.orange[600]),
                   ),
                   onPressed: () async {
-                    String? result = await Auth(auth: auth).signin(_email, _password);
+                    String? result = await Auth(auth: AuthService().auth).signin(_email, _password);
                     if (result == 'Success') {
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen(currentCategory: 'All Products',)));
                     } else {

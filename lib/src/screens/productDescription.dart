@@ -13,8 +13,8 @@ class ProductDescriptionScreen extends StatelessWidget {
   var sellerID;
   var deleted;
 
-  ProductDescriptionScreen(
-      {this.productDetailName,
+  ProductDescriptionScreen({
+      this.productDetailName,
       this.productDetailShopName,
       this.productDetailPrice,
       this.productDetailCategory,
@@ -22,7 +22,8 @@ class ProductDescriptionScreen extends StatelessWidget {
       this.productDetailImages,
       this.productID,
       this.sellerID,
-      required this.deleted});
+      required this.deleted
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,6 @@ class ProductDescriptionScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
                 height: 300,
@@ -53,7 +53,7 @@ class ProductDescriptionScreen extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        '$productDetailName',
+                        productDetailName,
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -108,7 +108,7 @@ class ProductDescriptionScreen extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        '$productDetailDescription',
+                        productDetailDescription,
                         style: const TextStyle(
                           fontSize: 16,
                         ),

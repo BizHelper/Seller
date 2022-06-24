@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/services/firebaseService.dart';
 import 'package:seller_app/src/screens/home.dart';
 import 'package:seller_app/src/widgets/chatCard.dart';
@@ -12,8 +12,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   FirebaseService _service = FirebaseService();
 
   @override
@@ -34,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _service.messages
-            .where('users', arrayContains: _auth.currentUser!.uid)
+            .where('users', arrayContains: AuthService().auth.currentUser!.uid)
             .snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -43,9 +41,8 @@ class _ChatScreenState extends State<ChatScreen> {
           }
           return ListView(
             children:
-                snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
+            snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data = document.data() as Map<String, dynamic>;
               return ChatCard(data);
             }).toList(),
           );

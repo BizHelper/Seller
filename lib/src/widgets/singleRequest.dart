@@ -25,7 +25,7 @@ class SingleRequest extends StatelessWidget {
     this.title,
     this.requestID,
     this.accepted,
-    required this.deleted,
+    this.deleted,
   });
 
   @override

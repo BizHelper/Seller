@@ -45,25 +45,29 @@ class _ChatCardState extends State<ChatCard> {
           );
         },
         leading: SizedBox(
-            child: Image.network(
-                widget.chatData['product']['productDetailImages'],
-                height: 50,
-                width: 50)),
+          child: Image.network(
+            widget.chatData['product']['productDetailImages'],
+            height: 50,
+            width: 50
+          ),
+        ),
         title: Text(widget.chatData['product']['buyerName']),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(widget.chatData['product']['productDetailName']),
-            Text('\$' + widget.chatData['product']['productDetailPrice'],
-                maxLines: 1),
+            Text(
+              '\$' + widget.chatData['product']['productDetailPrice'],
+              maxLines: 1
+            ),
             getDeleted() == 'true' ?
-                const Text(
-                  '[DELETED]',
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                ) :
-                Container(),
+            const Text(
+              '[DELETED]',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ) :
+            Container(),
           ],
         ),
         trailing: InkWell(

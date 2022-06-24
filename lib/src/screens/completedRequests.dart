@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/widgets/singleRequest.dart';
 
 class CompletedRequestsScreen extends StatefulWidget {
@@ -10,13 +10,7 @@ class CompletedRequestsScreen extends StatefulWidget {
   State<CompletedRequestsScreen> createState() => _CompletedRequestsScreenState();
 }
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
 class _CompletedRequestsScreenState extends State<CompletedRequestsScreen> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
   String _sellerName = '';
 
   Future<String> getSellerName() async {
@@ -47,43 +41,43 @@ class _CompletedRequestsScreenState extends State<CompletedRequestsScreen> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-          stream: FirebaseFirestore.instance.collection('requests')
-              .where('Seller Name', isEqualTo: getName())
-              .where('Accepted', isEqualTo: 'completed')
-              .where('Deleted', isEqualTo: 'false')
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) {
-              return Container();
-            }
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Flexible(
-                  child: ListView(
-                    children: snapshot.data!.docs.map(
-                          (requests) {
-                        return SingleRequest(
-                          buyerName: requests['Buyer Name'],
-                          buyerID: requests['Buyer ID'],
-                          sellerName: requests['Seller Name'],
-                          category: requests['Category'],
-                          deadline: requests['Deadline'],
-                          description: requests['Description'],
-                          price: requests['Price'],
-                          title: requests['Title'],
-                          requestID: requests['Request ID'],
-                          accepted: requests['Accepted'],
-                          deleted: requests['Deleted'],
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ),
-              ],
-            );
+        stream: FirebaseFirestore.instance.collection('requests')
+            .where('Seller Name', isEqualTo: getName())
+            .where('Accepted', isEqualTo: 'completed')
+            .where('Deleted', isEqualTo: 'false')
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (!snapshot.hasData) {
+            return Container();
           }
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Flexible(
+                child: ListView(
+                  children: snapshot.data!.docs.map(
+                    (requests) {
+                      return SingleRequest(
+                        buyerName: requests['Buyer Name'],
+                        buyerID: requests['Buyer ID'],
+                        sellerName: requests['Seller Name'],
+                        category: requests['Category'],
+                        deadline: requests['Deadline'],
+                        description: requests['Description'],
+                        price: requests['Price'],
+                        title: requests['Title'],
+                        requestID: requests['Request ID'],
+                        accepted: requests['Accepted'],
+                        deleted: requests['Deleted'],
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }

@@ -1,23 +1,20 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/home.dart';
+import 'package:seller_app/src/services/authService.dart';
 
 class VerifyScreen extends StatefulWidget {
-  const VerifyScreen({Key? key}) : super(key: key);
-
   @override
   _VerifyScreenState createState() => _VerifyScreenState();
 }
 
 class _VerifyScreenState extends State<VerifyScreen> {
-  final auth = FirebaseAuth.instance;
   var user;
   var timer;
 
   @override
   void initState() {
-    user = auth.currentUser;
+    user = AuthService().auth.currentUser;
     user.sendEmailVerification();
 
     timer = Timer.periodic(Duration(seconds: 5), (timer) {
@@ -46,7 +43,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
   }
 
   Future<void> checkEmailVerified() async {
-    user = auth.currentUser;
+    user = AuthService().auth.currentUser;
     await user.reload();
     if (user.emailVerified) {
       timer.cancel();

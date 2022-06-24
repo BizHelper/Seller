@@ -21,7 +21,7 @@ class Product extends StatelessWidget {
     this.prodImage,
     this.prodID,
     this.sellerID,
-    required this.deleted,
+    this.deleted,
   });
 
   @override

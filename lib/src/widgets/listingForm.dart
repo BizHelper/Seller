@@ -2,22 +2,15 @@ import 'dart:collection';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:seller_app/src/screens/listing.dart';
+import 'package:seller_app/src/services/authService.dart';
 
 class ListingForm extends StatefulWidget {
-  const ListingForm({Key? key}) : super(key: key);
-
   @override
   State<ListingForm> createState() => _ListingFormState();
-}
-
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
 }
 
 class _ListingFormState extends State<ListingForm> {
@@ -34,7 +27,6 @@ class _ListingFormState extends State<ListingForm> {
 
   PlatformFile? pickedImageFile;
   UploadTask? uploadTaskImage;
-  final db = FirebaseFirestore.instance;
 
   late String _sellerName;
   late String _sellerID;

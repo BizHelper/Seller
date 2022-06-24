@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_2.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/services/firebaseService.dart';
 
 class ChatConversations extends StatefulWidget {
@@ -18,7 +18,6 @@ class ChatConversations extends StatefulWidget {
 
 class _ChatConversationsState extends State<ChatConversations> {
   FirebaseService _service = FirebaseService();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   var chatMessageController = TextEditingController();
   bool _send = false;
 
@@ -26,7 +25,7 @@ class _ChatConversationsState extends State<ChatConversations> {
     if (chatMessageController.text.isNotEmpty) {
       Map<String, dynamic> message = {
         'message': chatMessageController.text,
-        'sentBy': _auth.currentUser!.uid,
+        'sentBy': AuthService().auth.currentUser!.uid,
         'time': DateTime.now().microsecondsSinceEpoch,
       };
       if (widget.type == 'listings') {
@@ -87,7 +86,7 @@ class _ChatConversationsState extends State<ChatConversations> {
                     itemBuilder: (context, index) {
                       int reverseIndex = snapshot.data!.docs.length - 1 - index;
                       String sentBy = snapshot.data!.docs[reverseIndex]['sentBy'];
-                      String me = _auth.currentUser!.uid;
+                      String me = AuthService().auth.currentUser!.uid;
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -124,28 +123,26 @@ class _ChatConversationsState extends State<ChatConversations> {
                 children: [
                   Expanded(
                     child: TextField(
-                        controller: chatMessageController,
-                        style: TextStyle(color: Colors.blue),
-                        decoration: const InputDecoration(
-                            hintText: 'Type Message',
-                            hintStyle: TextStyle(color: Colors.black),
-                            border: InputBorder.none),
-                        onChanged: (value) {
-                          if (value.isNotEmpty) {
-                            setState(() {
-                              _send = true;
-                            });
-                          } else {
-                            setState(() {
-                              _send = false;
-                            });
-                          }
-                        },
-                        onSubmitted: (value) {
-                          if (value.length > 0) {
-                            sendMessage();
-                          }
-                        }),
+                      controller: chatMessageController,
+                      style: TextStyle(color: Colors.blue),
+                      decoration: const InputDecoration(
+                        hintText: 'Type Message',
+                        hintStyle: TextStyle(color: Colors.black),
+                        border: InputBorder.none
+                      ),
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          setState(() => _send = true);
+                        } else {
+                          setState(() => _send = false);
+                        }
+                      },
+                      onSubmitted: (value) {
+                        if (value.length > 0) {
+                          sendMessage();
+                        }
+                      },
+                    ),
                   ),
                   Visibility(
                     visible: _send,

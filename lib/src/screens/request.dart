@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/completedRequests.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/requestChat.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 import 'package:seller_app/src/widgets/singleRequest.dart';
@@ -18,13 +18,7 @@ class RequestScreen extends StatefulWidget {
   State<RequestScreen> createState() => _RequestScreenState();
 }
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
 class _RequestScreenState extends State<RequestScreen> {
-  final auth = FirebaseAuth.instance;
   String _sellerName = '';
 
   Future<String> getSellerName() async {
@@ -64,7 +58,7 @@ class _RequestScreenState extends State<RequestScreen> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              auth.signOut();
+              AuthService().auth.signOut();
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             },

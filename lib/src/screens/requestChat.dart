@@ -1,21 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/services/firebaseService.dart';
 import 'package:seller_app/src/screens/request.dart';
 import 'package:seller_app/src/widgets/requestChatCard.dart';
 
 class RequestChatScreen extends StatefulWidget {
-  const RequestChatScreen({Key? key}) : super(key: key);
-
   @override
   State<RequestChatScreen> createState() => _RequestChatScreenState();
 }
 
 class _RequestChatScreenState extends State<RequestChatScreen> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
   FirebaseService _service = FirebaseService();
 
   @override
@@ -36,7 +32,7 @@ class _RequestChatScreenState extends State<RequestChatScreen> {
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: _service.requestMessages
-            .where('users', arrayContains: _auth.currentUser!.uid)
+            .where('users', arrayContains: AuthService().auth.currentUser!.uid)
             .snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot) {

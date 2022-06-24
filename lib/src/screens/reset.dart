@@ -1,7 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_app/src/screens/home.dart';
-import 'package:seller_app/src/screens/verify.dart';
+import 'package:seller_app/src/services/authService.dart';
 
 class ResetScreen extends StatefulWidget {
   const ResetScreen({Key? key}) : super(key: key);
@@ -12,7 +10,6 @@ class ResetScreen extends StatefulWidget {
 
 class _ResetScreenState extends State<ResetScreen> {
   var _email;
-  final auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +17,6 @@ class _ResetScreenState extends State<ResetScreen> {
       backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
         backgroundColor: Colors.cyan[900],
-        //centerTitle: true,
         title: const Text(
           'BizHelper',
           style: TextStyle(
@@ -66,7 +62,7 @@ class _ResetScreenState extends State<ResetScreen> {
                         MaterialStateProperty.all(Colors.orange[600]),
                   ),
                   onPressed: () {
-                    auth.sendPasswordResetEmail(email: _email);
+                    AuthService().auth.sendPasswordResetEmail(email: _email);
                     Navigator.of(context).pop();
                   },
                   child: const Text(

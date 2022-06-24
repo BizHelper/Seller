@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/services/firebaseService.dart';
 import 'package:seller_app/src/screens/chatConversation.dart';
 
@@ -37,13 +37,7 @@ class RequestDescriptionScreen extends StatefulWidget {
   State<RequestDescriptionScreen> createState() => _RequestDescriptionScreenState();
 }
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
 class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseService _service = FirebaseService();
   CollectionReference requests = FirebaseFirestore.instance.collection('requests');
   String _sellerName = '';
@@ -68,16 +62,16 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
 
     List<String> users = [
       widget.buyerID,
-      auth.currentUser!.uid
+      AuthService().auth.currentUser!.uid
     ];
 
-    String chatRoomId = '${widget.buyerID}.${auth.currentUser!.uid}.${widget.requestID}';
+    String chatRoomId = '${widget.buyerID}.${AuthService().auth.currentUser!.uid}.${widget.requestID}';
 
     Map<String, dynamic> chatData = {
-      'users' : users,
-      'chatRoomId' : chatRoomId,
-      'request' : request,
-      'lastChat' : null,
+      'users': users,
+      'chatRoomId': chatRoomId,
+      'request': request,
+      'lastChat': null,
       'lastChatTime' : DateTime.now().microsecondsSinceEpoch,
     };
 
@@ -121,9 +115,9 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                       ),
                     ),
                     SizedBox(width: 30),
-                    Text(
-                      '\$' + widget.price,
-                      style: const TextStyle(
+                    const Text(
+                      '\$ widget.price',
+                      style: TextStyle(
                         color: Colors.red,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

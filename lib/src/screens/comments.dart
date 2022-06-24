@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/services/authService.dart';
 
 final commentRef = FirebaseFirestore.instance.collection('comments');
-late CollectionReference buyersRef =
-    FirebaseFirestore.instance.collection('buyers');
-final FirebaseAuth _auth = FirebaseAuth.instance;
+late CollectionReference buyersRef = FirebaseFirestore.instance.collection('buyers');
 
 class CommentsScreen extends StatefulWidget {
   final String postID;
@@ -17,29 +15,22 @@ class CommentsScreen extends StatefulWidget {
   State<CommentsScreen> createState() => CommentsScreenState();
 }
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
 class CommentsScreenState extends State<CommentsScreen> {
   TextEditingController commentController = TextEditingController();
   buildComments() {
     return StreamBuilder(
-        stream:
-            commentRef.doc(widget.postID).collection('comments').orderBy('time').snapshots(),
-        builder: (BuildContext context,
-            AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-
-          List<Comment> comments = [];
-          snapshot.data!.docs.forEach((doc) {
-            comments.add(Comment.fromDocument(doc));
-          });
-          return ListView(children: comments);
+      stream: commentRef.doc(widget.postID).collection('comments').orderBy('time').snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+        if (!snapshot.hasData) {
+          return Container();
+        }
+        List<Comment> comments = [];
+        snapshot.data!.docs.forEach((doc) {
+          comments.add(Comment.fromDocument(doc));
         });
+        return ListView(children: comments);
+      },
+    );
   }
 
   addComment() async {
@@ -51,7 +42,7 @@ class CommentsScreenState extends State<CommentsScreen> {
     commentRef.doc(widget.postID).collection("comments").add(
       {
         "comment": commentController.text,
-        "userId": _auth.currentUser!.uid,
+        "userId": AuthService().auth.currentUser!.uid,
         "name": sellerName,
         "profilePic": profilePic,
         "time": DateTime.now().microsecondsSinceEpoch,
@@ -130,7 +121,6 @@ class Comment extends StatelessWidget {
                   image: Image.network(profilePic).image,
                 ),
               ),
-              //child: Image.network(profilePic),
             ),
           ),
           Expanded(
@@ -152,17 +142,7 @@ class Comment extends StatelessWidget {
                 ],
               ),
             ),
-          )
-          // Text(
-          //   "  " + name,
-          //   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-          // ),
-          // Expanded(
-          //   child: Padding(
-          //     padding: const EdgeInsets.only(left: 8.0),
-          //     child: Text(comment, style: TextStyle(fontSize: 15)),
-          //   ),
-          // ),
+          ),
         ],
       ),
     );

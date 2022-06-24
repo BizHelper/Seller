@@ -2,20 +2,13 @@ import 'dart:collection';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/services/authService.dart';
 
 class PostFormScreen extends StatefulWidget {
-  const PostFormScreen({Key? key}) : super(key: key);
-
   @override
   State<PostFormScreen> createState() => _PostFormScreenState();
-}
-
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
 }
 
 class _PostFormScreenState extends State<PostFormScreen> {

@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/src/screens/login.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
 class AccountScreen extends StatefulWidget {
@@ -12,13 +12,7 @@ class AccountScreen extends StatefulWidget {
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
 class _AccountScreenState extends State<AccountScreen> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
   String _sellerName = '';
   var _image = '';
 
@@ -61,7 +55,7 @@ class _AccountScreenState extends State<AccountScreen> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              auth.signOut();
+              AuthService().auth.signOut();
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             },
@@ -129,14 +123,13 @@ class _AccountScreenState extends State<AccountScreen> {
                     ),
                     ElevatedButton(
                       style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
+                        backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
                       onPressed: () async {
                         final uid = AuthService().currentUser?.uid;
                         String sellerName = getName();
                         DocumentReference dr = FirebaseFirestore.instance.collection('sellers').doc(uid);
                         final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
                         if (pickedFile == null) {
-                          print('null');
                           return;
                         }
                         final File image = (File(pickedFile.path));
@@ -146,8 +139,8 @@ class _AccountScreenState extends State<AccountScreen> {
                         await ref.putFile(image);
                         String imageURL = await ref.getDownloadURL();
                         dr.set({
-                          'Name' : sellerName,
-                          'Profile Pic' : imageURL
+                          'Name': sellerName,
+                          'Profile Pic': imageURL
                         });
                         setState(() => _image = imageURL);
                       },

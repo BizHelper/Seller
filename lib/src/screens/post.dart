@@ -1,31 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/login.dart';
 import 'package:seller_app/src/screens/postForm.dart';
 import 'package:seller_app/src/screens/video.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
 class PostScreen extends StatefulWidget {
-  const PostScreen({Key? key}) : super(key: key);
-
   @override
   State<PostScreen> createState() => _PostScreenState();
 }
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
-}
-
 class _PostScreenState extends State<PostScreen> {
-  final auth = FirebaseAuth.instance;
   String _sellerName = '';
 
   Future<String> getSellerName() async {
     final uid = AuthService().currentUser?.uid;
-    DocumentSnapshot ds =
-        await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
     setState(() => _sellerName = ds.get('Name'));
     return _sellerName;
   }
@@ -46,7 +37,7 @@ class _PostScreenState extends State<PostScreen> {
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: () {
-              auth.signOut();
+              AuthService().auth.signOut();
               Navigator.of(context).pushReplacement(
                   MaterialPageRoute(builder: (context) => LoginScreen()));
             },

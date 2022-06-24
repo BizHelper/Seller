@@ -1,14 +1,12 @@
 import 'dart:collection';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:seller_app/src/services/auth.dart';
 import 'package:seller_app/src/screens/verify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:seller_app/src/services/authService.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({Key? key}) : super(key: key);
-
   @override
   _SignupScreenState createState() => _SignupScreenState();
 }
@@ -18,7 +16,6 @@ class _SignupScreenState extends State<SignupScreen> {
   var _password;
   var _shopName;
   var userID;
-  final auth = FirebaseAuth.instance;
   FirebaseFirestore fstore = FirebaseFirestore.instance;
 
   Future<bool> checkUsername(String username) async {
@@ -30,7 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   showAlertDialog(BuildContext context) {
     AlertDialog dialog = AlertDialog(
-      title: Text(
+      title: const Text(
         'Shop Name has been taken',
       ),
       actions: [
@@ -87,9 +84,7 @@ class _SignupScreenState extends State<SignupScreen> {
               child: TextField(
                 decoration: InputDecoration(hintText: 'Shop Name'),
                 onChanged: (value) {
-                  setState(() {
-                    _shopName = value.trim();
-                  });
+                  setState(() => _shopName = value.trim());
                 },
               ),
             ),
@@ -99,9 +94,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(hintText: 'Email'),
                 onChanged: (value) {
-                  setState(() {
-                    _email = value.trim();
-                  });
+                  setState(() => _email = value.trim());
                 },
               ),
             ),
@@ -110,11 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
               child: TextField(
                 obscureText: true,
                 decoration: InputDecoration(hintText: 'Password'),
-                onChanged: (value) {
-                  setState(() {
-                    _password = value.trim();
-                  });
-                },
+                onChanged: (value) => setState(() => _password = value.trim())
               ),
             ),
             Row(
@@ -122,17 +111,15 @@ class _SignupScreenState extends State<SignupScreen> {
               children: [
                 ElevatedButton(
                   style: ButtonStyle(
-                      backgroundColor:
-                      MaterialStateProperty.all(Colors.orange[600])),
+                    backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
                   onPressed: () async {
                     final isUnique = await checkUsername(_shopName);
-                    print(isUnique);
                     if (!isUnique) {
                       showAlertDialog(context);
                     } else {
-                      String? result = await Auth(auth: auth).signup(_email, _password);
+                      String? result = await Auth(auth: AuthService().auth).signup(_email, _password);
                       if (result == 'Success') {
-                        userID = auth.currentUser!.uid;
+                        userID = AuthService().auth.currentUser!.uid;
                         DocumentReference documentReference = fstore.collection("sellers").doc(userID);
                         Map<String, Object> user = new HashMap();
                         user.putIfAbsent('Name', () => _shopName);
