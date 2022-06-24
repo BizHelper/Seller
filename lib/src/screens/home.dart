@@ -3,12 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/chat.dart';
 import 'package:seller_app/src/screens/login.dart';
+import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 import 'package:seller_app/src/widgets/product.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  var currentCategory;
+
+  HomeScreen({required this.currentCategory});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -69,7 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('listings')
+        stream: widget.currentCategory == 'All Products' ?
+        FirebaseFirestore.instance.collection('listings')
+            .where('Seller Name', isEqualTo: getName())
+            .where('Deleted', isEqualTo: 'false')
+            .snapshots() :
+        FirebaseFirestore.instance.collection('listings')
+            .where('Category', isEqualTo: widget.currentCategory)
             .where('Seller Name', isEqualTo: getName())
             .where('Deleted', isEqualTo: 'false')
             .snapshots(),
@@ -92,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Categories(
-                currentCategory: 'All Products',
+                currentCategory: widget.currentCategory,
                 currentPage: 'Home',
               ),
               Flexible(

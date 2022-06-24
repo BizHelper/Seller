@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:seller_app/src/screens/category.dart';
 import 'package:seller_app/src/screens/home.dart';
 import 'package:seller_app/src/screens/myRequests.dart';
 import 'package:seller_app/src/screens/request.dart';
@@ -9,7 +8,9 @@ class Categories extends StatelessWidget {
   var currentCategory;
   var currentPage;
 
-  Categories({this.currentCategory, this.currentPage});
+  Categories({this.currentCategory,
+    this.currentPage
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,7 @@ class CategoryButton extends StatelessWidget {
         if (text == 'All Products') {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                  builder: (context) => HomeScreen()));
+                  builder: (context) => HomeScreen(currentCategory: 'All Products',)));
         } else if (text == 'All Requests' && currentPage == 'Available Requests') {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(
@@ -102,7 +103,7 @@ class CategoryButton extends StatelessWidget {
         } else if (currentPage == 'Home') {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                  builder: (context) => CategoryScreen(currentCategory: text)));
+                  builder: (context) => HomeScreen(currentCategory: text)));
         } else {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(

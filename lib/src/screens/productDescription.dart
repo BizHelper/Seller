@@ -23,6 +23,7 @@ class ProductDescriptionScreen extends StatelessWidget {
       this.productID,
       this.sellerID,
       required this.deleted});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

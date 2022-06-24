@@ -55,7 +55,7 @@ class NavigateBar extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => HomeScreen()));
+                            builder: (context) => HomeScreen(currentCategory: 'All Products',)));
                   },
                   child: Column(
                     children: const [
