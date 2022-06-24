@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:seller_app/src/services/auth.dart';
 import 'package:seller_app/src/screens/verify.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -129,7 +130,19 @@ class _SignupScreenState extends State<SignupScreen> {
                     if (!isUnique) {
                       showAlertDialog(context);
                     } else {
-                      _signup(_email, _password);
+                      String? result = await Auth(auth: auth).signup(_email, _password);
+                      if (result == 'Success') {
+                        userID = auth.currentUser!.uid;
+                        DocumentReference documentReference = fstore.collection("sellers").doc(userID);
+                        Map<String, Object> user = new HashMap();
+                        user.putIfAbsent('Name', () => _shopName);
+                        user.putIfAbsent('Seller ID', () => userID);
+                        documentReference.set(user);
+
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => VerifyScreen()));
+                      } else {
+                        Fluttertoast.showToast(msg: result ?? '', gravity: ToastGravity.TOP);
+                      }
                     }
                   },
                   child: const Text(
@@ -144,24 +157,4 @@ class _SignupScreenState extends State<SignupScreen> {
       ),
     );
   }
-
-  _signup(String _email, String _password) async {
-    try {
-      await auth
-          .createUserWithEmailAndPassword(
-          email: _email, password: _password);
-
-      userID = auth.currentUser!.uid;
-      DocumentReference documentReference = fstore.collection("sellers").doc(userID);
-      Map<String, Object> user = new HashMap();
-      user.putIfAbsent('Name', () => _shopName);
-      user.putIfAbsent('Seller ID', () => userID);
-      documentReference.set(user);
-
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => VerifyScreen()));
-    } on FirebaseAuthException catch (error) {
-      Fluttertoast.showToast(msg: error.message!, gravity: ToastGravity.TOP);
-    }
-  }
-
 }

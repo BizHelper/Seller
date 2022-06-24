@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:seller_app/src/services/auth.dart';
 import 'package:seller_app/src/screens/home.dart';
 import 'package:seller_app/src/screens/reset.dart';
 import 'package:seller_app/src/screens/signup.dart';
@@ -80,8 +81,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     backgroundColor:
                         MaterialStateProperty.all(Colors.orange[600]),
                   ),
-                  onPressed: () {
-                    _signin(_email, _password);
+                  onPressed: () async {
+                    String? result = await Auth(auth: auth).signin(_email, _password);
+                    if (result == 'Success') {
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+                    } else {
+                      Fluttertoast.showToast(msg: result ?? '', gravity: ToastGravity.TOP);
+                    }
                   },
                   child: const Text(
                     'Sign in',
@@ -117,17 +123,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  _signin(String _email, String _password) async {
-    try {
-      await auth
-          .signInWithEmailAndPassword(
-          email: _email, password: _password);
-
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
-    } on FirebaseAuthException catch (error) {
-      Fluttertoast.showToast(msg: error.message!, gravity: ToastGravity.TOP);
-    }
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_2.dart';
-import 'package:seller_app/src/firebaseService.dart';
+import 'package:seller_app/src/services/firebaseService.dart';
 
 class ChatConversations extends StatefulWidget {
   final String chatRoomId;

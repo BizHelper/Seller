@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:seller_app/src/firebaseService.dart';
+import 'package:seller_app/src/services/firebaseService.dart';
 import 'package:seller_app/src/screens/request.dart';
 import 'package:seller_app/src/widgets/requestChatCard.dart';
 

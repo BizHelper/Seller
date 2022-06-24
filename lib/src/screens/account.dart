@@ -114,8 +114,19 @@ class _AccountScreenState extends State<AccountScreen> {
                   height: 30.0,
                 ),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
+                      onPressed: () {
+
+                      },
+                      child: const Text(
+                        'Update Shop Info',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
                     ElevatedButton(
                       style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all(Colors.orange[600])),

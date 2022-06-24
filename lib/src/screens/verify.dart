@@ -37,7 +37,10 @@ class _VerifyScreenState extends State<VerifyScreen> {
     return Scaffold(
       backgroundColor: Colors.blueGrey[50],
       body: Center(
-        child: Text('An email has been sent to ${user.email}. Please verify.'),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('An email has been sent to ${user.email}. Please verify. (check spam folder)'),
+        ),
       ),
     );
   }
@@ -47,7 +50,7 @@ class _VerifyScreenState extends State<VerifyScreen> {
     await user.reload();
     if (user.emailVerified) {
       timer.cancel();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen()));
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => HomeScreen()), (Route<dynamic> route) => false);
     }
   }
 }
