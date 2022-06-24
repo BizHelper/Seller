@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/home.dart';
-import 'package:seller_app/src/screens/myRequests.dart';
 import 'package:seller_app/src/screens/request.dart';
-import 'package:seller_app/src/screens/requestCategory.dart';
 
 class Categories extends StatelessWidget {
   var currentCategory;
@@ -88,26 +86,14 @@ class CategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       onPressed: () {
-        if (text == 'All Products') {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) => HomeScreen(currentCategory: 'All Products',)));
-        } else if (text == 'All Requests' && currentPage == 'Available Requests') {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) => RequestScreen()));
-        } else if (text == 'All Requests' && currentPage == 'My Requests') {
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                  builder: (context) => MyRequestsScreen()));
-        } else if (currentPage == 'Home') {
+        if (currentPage == 'Home') {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                   builder: (context) => HomeScreen(currentCategory: text)));
         } else {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                  builder: (context) => RequestCategoryScreen(currentCategory: text, currentPage: currentPage,)));
+                  builder: (context) => RequestScreen(currentCategory: text, type: currentPage,)));
         }
       },
       style: TextButton.styleFrom(
@@ -118,7 +104,7 @@ class CategoryButton extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(6.0),
           child: Text(
-            text == 'Others' ? '   Others   ' : '$text',
+            text == 'Others' ? '   Others   ' : text,
             style: const TextStyle(
               color: Colors.black,
               fontSize: 12.0,

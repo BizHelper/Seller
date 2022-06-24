@@ -3,15 +3,41 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:seller_app/src/screens/completedRequests.dart';
 import 'package:seller_app/src/screens/login.dart';
-import 'package:seller_app/src/screens/myRequests.dart';
 import 'package:seller_app/src/screens/requestChat.dart';
 import 'package:seller_app/src/widgets/categories.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 import 'package:seller_app/src/widgets/singleRequest.dart';
 
-class RequestScreen extends StatelessWidget {
+class RequestScreen extends StatefulWidget {
+  var type;
+  var currentCategory;
 
+  RequestScreen({required this.type, required this.currentCategory});
+
+  @override
+  State<RequestScreen> createState() => _RequestScreenState();
+}
+
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? get currentUser => _auth.currentUser;
+}
+
+class _RequestScreenState extends State<RequestScreen> {
   final auth = FirebaseAuth.instance;
+  String _sellerName = '';
+
+  Future<String> getSellerName() async {
+    final uid = AuthService().currentUser?.uid;
+    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    setState(() => _sellerName = ds.get('Name'));
+    return _sellerName;
+  }
+
+  String getName() {
+    getSellerName();
+    return _sellerName;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +79,27 @@ class RequestScreen extends StatelessWidget {
         ),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('requests')
+        stream: widget.type == 'Available Requests' && widget.currentCategory == 'All Requests'?
+        FirebaseFirestore.instance.collection('requests')
             .where('Seller Name', isEqualTo: 'null')
+            .where('Deleted', isEqualTo: 'false')
+            .snapshots() :
+        widget.type == 'My Requests' && widget.currentCategory == 'All Requests' ?
+        FirebaseFirestore.instance.collection('requests')
+            .where('Seller Name', isEqualTo: getName())
+            .where('Accepted', isEqualTo: 'true')
+            .where('Deleted', isEqualTo: 'false')
+            .snapshots() :
+        widget.type == 'Available Requests' ?
+        FirebaseFirestore.instance.collection('requests')
+            .where('Category', isEqualTo: widget.currentCategory)
+            .where('Seller Name', isEqualTo: 'null')
+            .where('Deleted', isEqualTo: 'false')
+            .snapshots() :
+        FirebaseFirestore.instance.collection('requests')
+            .where('Category', isEqualTo: widget.currentCategory)
+            .where('Seller Name', isEqualTo: getName())
+            .where('Accepted', isEqualTo: 'true')
             .where('Deleted', isEqualTo: 'false')
             .snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -71,9 +116,22 @@ class RequestScreen extends StatelessWidget {
                   children: [
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (widget.type != 'Available Requests') {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => RequestScreen(
+                                  type: 'Available Requests',
+                                  currentCategory: widget.currentCategory,
+                                ),
+                              ),
+                            );
+                          }
+                        },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.amber),
+                          backgroundColor: MaterialStateProperty.all(
+                            widget.type == 'Available Requests'? Colors.amber : Colors.orange
+                          ),
                           shape: MaterialStateProperty.all(
                             const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
@@ -89,10 +147,21 @@ class RequestScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MyRequestsScreen()));
+                          if (widget.type != 'My Requests') {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) => RequestScreen(
+                                  type: 'My Requests',
+                                  currentCategory: widget.currentCategory,
+                                ),
+                              ),
+                            );
+                          }
                         },
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.orange),
+                          backgroundColor: MaterialStateProperty.all(
+                            widget.type == 'My Requests' ? Colors.amber : Colors.orange
+                          ),
                           shape: MaterialStateProperty.all(
                             const RoundedRectangleBorder(
                               borderRadius: BorderRadius.zero,
@@ -109,8 +178,8 @@ class RequestScreen extends StatelessWidget {
                 ),
               ),
               Categories(
-                currentCategory: 'All Requests',
-                currentPage: 'Available Requests',
+                currentCategory: widget.currentCategory,
+                currentPage: widget.type,
               ),
               Flexible(
                 child: ListView(
