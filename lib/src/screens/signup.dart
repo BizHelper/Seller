@@ -124,6 +124,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Map<String, Object> user = new HashMap();
                         user.putIfAbsent('Name', () => _shopName);
                         user.putIfAbsent('Seller ID', () => userID);
+                        user.putIfAbsent('Profile Pic', () => 'https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png');
                         documentReference.set(user);
 
                         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => VerifyScreen()));

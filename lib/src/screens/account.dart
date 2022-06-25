@@ -86,9 +86,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   color: Colors.white,
                   image: DecorationImage(
                     fit: BoxFit.fill,
-                    image: !(Uri.tryParse(getImage())?.hasAbsolutePath ?? false)
-                      ? Image.asset('images/noProfilePic.png').image
-                      : Image.network(_image).image,
+                    image: Image.network(getImage()).image,
                   ),
                 ),
               ),

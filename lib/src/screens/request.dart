@@ -189,6 +189,7 @@ class _RequestScreenState extends State<RequestScreen> {
                         price: requests['Price'],
                         title: requests['Title'],
                         requestID: requests['Request ID'],
+                        accepted: requests['Accepted'],
                         deleted: requests['Deleted'],
                       );
                     },
