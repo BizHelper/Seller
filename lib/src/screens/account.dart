@@ -69,93 +69,90 @@ class _AccountScreenState extends State<AccountScreen> {
           ),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Container(
-                  width: 200,
-                  height: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.white,
-                    image: DecorationImage(
-                      fit: BoxFit.fill,
-                      image: !(Uri.tryParse(getImage())?.hasAbsolutePath ?? false)
-                        ? Image.asset('images/noProfilePic.png').image
-                        : Image.network(_image).image,
-                    ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              const SizedBox(
+                height: 20.0,
+              ),
+              Container(
+                width: 200,
+                height: 200,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                  image: DecorationImage(
+                    fit: BoxFit.fill,
+                    image: !(Uri.tryParse(getImage())?.hasAbsolutePath ?? false)
+                      ? Image.asset('images/noProfilePic.png').image
+                      : Image.network(_image).image,
                   ),
                 ),
-                const SizedBox(
-                  height: 20.0,
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                getName(),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  getName(),
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 30.0,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
-                      onPressed: () {
-
-                      },
-                      child: const Text(
-                        'Update Shop Info',
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    ),
-                    ElevatedButton(
-                      style: ButtonStyle(
+              ),
+              const SizedBox(
+                height: 30.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
-                      onPressed: () async {
-                        final uid = AuthService().currentUser?.uid;
-                        String sellerName = getName();
-                        DocumentReference dr = FirebaseFirestore.instance.collection('sellers').doc(uid);
-                        final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-                        if (pickedFile == null) {
-                          return;
-                        }
-                        final File image = (File(pickedFile.path));
+                    onPressed: () {
 
-                        FirebaseStorage storage = FirebaseStorage.instance;
-                        Reference ref = storage.ref().child(pickedFile.path + DateTime.now().toString());
-                        await ref.putFile(image);
-                        String imageURL = await ref.getDownloadURL();
-                        dr.set({
-                          'Name': sellerName,
-                          'Profile Pic': imageURL
-                        });
-                        setState(() => _image = imageURL);
-                      },
-                      child: const Text(
-                        'Change Profile Picture',
-                        style: TextStyle(color: Colors.black),
-                      ),
+                    },
+                    child: const Text(
+                      'Update Shop Info',
+                      style: TextStyle(color: Colors.black),
                     ),
-                  ],
-                ),
-              ],
-            ),
-            NavigateBar(),
-          ],
-        ),
+                  ),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
+                    onPressed: () async {
+                      final uid = AuthService().currentUser?.uid;
+                      String sellerName = getName();
+                      DocumentReference dr = FirebaseFirestore.instance.collection('sellers').doc(uid);
+                      final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+                      if (pickedFile == null) {
+                        return;
+                      }
+                      final File image = (File(pickedFile.path));
+
+                      FirebaseStorage storage = FirebaseStorage.instance;
+                      Reference ref = storage.ref().child(pickedFile.path + DateTime.now().toString());
+                      await ref.putFile(image);
+                      String imageURL = await ref.getDownloadURL();
+                      dr.set({
+                        'Name': sellerName,
+                        'Profile Pic': imageURL
+                      });
+                      setState(() => _image = imageURL);
+                    },
+                    child: const Text(
+                      'Change Profile Picture',
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          NavigateBar(),
+        ],
       ),
     );
   }
