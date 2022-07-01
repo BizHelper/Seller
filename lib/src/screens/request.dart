@@ -20,16 +20,91 @@ class RequestScreen extends StatefulWidget {
 
 class _RequestScreenState extends State<RequestScreen> {
   String _sellerName = '';
+  TextEditingController controller = TextEditingController();
+  List allResults = [];
+  List filteredResults = [];
+  late Future resultsLoaded;
+
+  @override
+  void initState() {
+    super.initState();
+    controller.addListener(onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    controller.removeListener(onSearchChanged);
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    resultsLoaded = getRequestList();
+  }
+
+  onSearchChanged() {
+    searchResultList();
+  }
+
+  searchResultList() {
+    var showResults = [];
+    if (controller.text != '') {
+      for (var request in allResults) {
+        var title = request['Title'].toString().toLowerCase();
+
+        if (title.contains(controller.text.toLowerCase())) {
+          showResults.add(request);
+        }
+      }
+    } else {
+      showResults = List.from(allResults);
+    }
+    setState(() => filteredResults = showResults);
+  }
+
+  getRequestList() async {
+    await getSellerName();
+    var data = widget.type == 'Available Requests' &&
+            widget.currentCategory == 'All Requests'
+        ? await FirebaseFirestore.instance
+            .collection('requests')
+            .where('Seller Name', isEqualTo: 'null')
+            .where('Deleted', isEqualTo: 'false')
+            .get()
+        : widget.type == 'My Requests' &&
+                widget.currentCategory == 'All Requests'
+            ? await FirebaseFirestore.instance
+                .collection('requests')
+                .where('Seller Name', isEqualTo: _sellerName)
+                .where('Accepted', isEqualTo: 'true')
+                .where('Deleted', isEqualTo: 'false')
+                .get()
+            : widget.type == 'Available Requests'
+                ? await FirebaseFirestore.instance
+                    .collection('requests')
+                    .where('Category', isEqualTo: widget.currentCategory)
+                    .where('Seller Name', isEqualTo: 'null')
+                    .where('Deleted', isEqualTo: 'false')
+                    .get()
+                : await FirebaseFirestore.instance
+                    .collection('requests')
+                    .where('Category', isEqualTo: widget.currentCategory)
+                    .where('Seller Name', isEqualTo: _sellerName)
+                    .where('Accepted', isEqualTo: 'true')
+                    .where('Deleted', isEqualTo: 'false')
+                    .get();
+    setState(() => allResults = data.docs);
+    searchResultList();
+    return data.docs;
+  }
 
   Future<String> getSellerName() async {
     final uid = AuthService().currentUser?.uid;
-    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+    DocumentSnapshot ds =
+        await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
     setState(() => _sellerName = ds.get('Name'));
-    return _sellerName;
-  }
-
-  String getName() {
-    getSellerName();
     return _sellerName;
   }
 
@@ -51,8 +126,8 @@ class _RequestScreenState extends State<RequestScreen> {
           IconButton(
             icon: Icon(Icons.domain_verification),
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => CompletedRequestsScreen()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => CompletedRequestsScreen()));
             },
           ),
           IconButton(
@@ -72,134 +147,115 @@ class _RequestScreenState extends State<RequestScreen> {
           ),
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: widget.type == 'Available Requests' && widget.currentCategory == 'All Requests'?
-        FirebaseFirestore.instance.collection('requests')
-            .where('Seller Name', isEqualTo: 'null')
-            .where('Deleted', isEqualTo: 'false')
-            .snapshots() :
-        widget.type == 'My Requests' && widget.currentCategory == 'All Requests' ?
-        FirebaseFirestore.instance.collection('requests')
-            .where('Seller Name', isEqualTo: getName())
-            .where('Accepted', isEqualTo: 'true')
-            .where('Deleted', isEqualTo: 'false')
-            .snapshots() :
-        widget.type == 'Available Requests' ?
-        FirebaseFirestore.instance.collection('requests')
-            .where('Category', isEqualTo: widget.currentCategory)
-            .where('Seller Name', isEqualTo: 'null')
-            .where('Deleted', isEqualTo: 'false')
-            .snapshots() :
-        FirebaseFirestore.instance.collection('requests')
-            .where('Category', isEqualTo: widget.currentCategory)
-            .where('Seller Name', isEqualTo: getName())
-            .where('Accepted', isEqualTo: 'true')
-            .where('Deleted', isEqualTo: 'false')
-            .snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                contentPadding: EdgeInsets.all(0),
-                title: Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (widget.type != 'Available Requests') {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => RequestScreen(
-                                  type: 'Available Requests',
-                                  currentCategory: widget.currentCategory,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            widget.type == 'Available Requests'? Colors.amber : Colors.orange
-                          ),
-                          shape: MaterialStateProperty.all(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.all(0),
+            title: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (widget.type != 'Available Requests') {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => RequestScreen(
+                              type: 'Available Requests',
+                              currentCategory: widget.currentCategory,
                             ),
                           ),
-                        ),
-                        child: const Text(
-                          'Available Requests',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (widget.type != 'My Requests') {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                builder: (context) => RequestScreen(
-                                  type: 'My Requests',
-                                  currentCategory: widget.currentCategory,
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                            widget.type == 'My Requests' ? Colors.amber : Colors.orange
-                          ),
-                          shape: MaterialStateProperty.all(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
-                            ),
-                          ),
-                        ),
-                        child: const Text(
-                          'My Requests',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Categories(
-                currentCategory: widget.currentCategory,
-                currentPage: widget.type,
-              ),
-              Flexible(
-                child: ListView(
-                  children: snapshot.data!.docs.map(
-                    (requests) {
-                      return SingleRequest(
-                        buyerName: requests['Buyer Name'],
-                        buyerID: requests['Buyer ID'],
-                        sellerName: requests['Seller Name'],
-                        category: requests['Category'],
-                        deadline: requests['Deadline'],
-                        description: requests['Description'],
-                        price: requests['Price'],
-                        title: requests['Title'],
-                        requestID: requests['Request ID'],
-                        accepted: requests['Accepted'],
-                        deleted: requests['Deleted'],
-                      );
+                        );
+                      }
                     },
-                  ).toList(),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          widget.type == 'Available Requests'
+                              ? Colors.amber
+                              : Colors.orange),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'Available Requests',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (widget.type != 'My Requests') {
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => RequestScreen(
+                              type: 'My Requests',
+                              currentCategory: widget.currentCategory,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                          widget.type == 'My Requests'
+                              ? Colors.amber
+                              : Colors.orange),
+                      shape: MaterialStateProperty.all(
+                        const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.zero,
+                        ),
+                      ),
+                    ),
+                    child: const Text(
+                      'My Requests',
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Categories(
+            currentCategory: widget.currentCategory,
+            currentPage: widget.type,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
+            child: TextField(
+              controller: controller,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.search),
+                hintText: 'Search Requests',
               ),
-              NavigateBar(),
-            ],
-          );
-        }
+            ),
+          ),
+          Flexible(
+            child: ListView.builder(
+              itemCount: filteredResults.length,
+              itemBuilder: (BuildContext context, int index) => SingleRequest(
+                buyerName: filteredResults[index]['Buyer Name'],
+                buyerID: filteredResults[index]['Buyer ID'],
+                sellerName: filteredResults[index]['Seller Name'],
+                category: filteredResults[index]['Category'],
+                deadline: filteredResults[index]['Deadline'],
+                description: filteredResults[index]['Description'],
+                price: filteredResults[index]['Price'],
+                title: filteredResults[index]['Title'],
+                requestID: filteredResults[index]['Request ID'],
+                accepted: filteredResults[index]['Accepted'],
+                deleted: filteredResults[index]['Deleted'],
+              ),
+            ),
+          ),
+          NavigateBar(),
+        ],
       ),
     );
   }
