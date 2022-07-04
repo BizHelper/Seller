@@ -38,7 +38,10 @@ class NavigateBar extends StatelessWidget {
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => RequestScreen(type: 'Available Requests', currentCategory: 'All Requests',)));
+                            builder: (context) => RequestScreen(
+                                type: 'Available Requests',
+                                currentCategory: 'All Requests',
+                                sort: 'Default')));
                   },
                   child: Column(
                     children: const [

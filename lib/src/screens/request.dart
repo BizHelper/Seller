@@ -11,8 +11,9 @@ import 'package:seller_app/src/widgets/singleRequest.dart';
 class RequestScreen extends StatefulWidget {
   var type;
   var currentCategory;
+  var sort;
 
-  RequestScreen({required this.type, required this.currentCategory});
+  RequestScreen({required this.type, required this.currentCategory, required this.sort});
 
   @override
   State<RequestScreen> createState() => _RequestScreenState();
@@ -20,21 +21,28 @@ class RequestScreen extends StatefulWidget {
 
 class _RequestScreenState extends State<RequestScreen> {
   String _sellerName = '';
-  TextEditingController controller = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   List allResults = [];
   List filteredResults = [];
   late Future resultsLoaded;
+  final List<String> sortCategories = [
+    'Default',
+    'Price: high to low',
+    'Price: low to high',
+    'Deadline: latest to earliest',
+    'Deadline: earliest to latest',
+  ];
 
   @override
   void initState() {
     super.initState();
-    controller.addListener(onSearchChanged);
+    searchController.addListener(onSearchChanged);
   }
 
   @override
   void dispose() {
-    controller.removeListener(onSearchChanged);
-    controller.dispose();
+    searchController.removeListener(onSearchChanged);
+    searchController.dispose();
     super.dispose();
   }
 
@@ -50,11 +58,11 @@ class _RequestScreenState extends State<RequestScreen> {
 
   searchResultList() {
     var showResults = [];
-    if (controller.text != '') {
+    if (searchController.text != '') {
       for (var request in allResults) {
         var title = request['Title'].toString().toLowerCase();
 
-        if (title.contains(controller.text.toLowerCase())) {
+        if (title.contains(searchController.text.toLowerCase())) {
           showResults.add(request);
         }
       }
@@ -68,36 +76,37 @@ class _RequestScreenState extends State<RequestScreen> {
     await getSellerName();
     var data = widget.type == 'Available Requests' &&
             widget.currentCategory == 'All Requests'
-        ? await FirebaseFirestore.instance
+        ? FirebaseFirestore.instance
             .collection('requests')
             .where('Seller Name', isEqualTo: 'null')
             .where('Deleted', isEqualTo: 'false')
-            .get()
         : widget.type == 'My Requests' &&
                 widget.currentCategory == 'All Requests'
-            ? await FirebaseFirestore.instance
+            ? FirebaseFirestore.instance
                 .collection('requests')
                 .where('Seller Name', isEqualTo: _sellerName)
                 .where('Accepted', isEqualTo: 'true')
                 .where('Deleted', isEqualTo: 'false')
-                .get()
             : widget.type == 'Available Requests'
-                ? await FirebaseFirestore.instance
+                ? FirebaseFirestore.instance
                     .collection('requests')
                     .where('Category', isEqualTo: widget.currentCategory)
                     .where('Seller Name', isEqualTo: 'null')
                     .where('Deleted', isEqualTo: 'false')
-                    .get()
-                : await FirebaseFirestore.instance
+                : FirebaseFirestore.instance
                     .collection('requests')
                     .where('Category', isEqualTo: widget.currentCategory)
                     .where('Seller Name', isEqualTo: _sellerName)
                     .where('Accepted', isEqualTo: 'true')
-                    .where('Deleted', isEqualTo: 'false')
-                    .get();
-    setState(() => allResults = data.docs);
+                    .where('Deleted', isEqualTo: 'false');
+    var sortedData = widget.sort == 'Price: high to low'
+      ? await data.orderBy('Price Double', descending: true).get()
+      : widget.sort == 'Price: low to high'
+      ? await data.orderBy('Price Double').get()
+      : await data.get();
+    setState(() => allResults = sortedData.docs);
     searchResultList();
-    return data.docs;
+    return sortedData.docs;
   }
 
   Future<String> getSellerName() async {
@@ -164,6 +173,7 @@ class _RequestScreenState extends State<RequestScreen> {
                             builder: (context) => RequestScreen(
                               type: 'Available Requests',
                               currentCategory: widget.currentCategory,
+                              sort: 'Default',
                             ),
                           ),
                         );
@@ -196,6 +206,7 @@ class _RequestScreenState extends State<RequestScreen> {
                             builder: (context) => RequestScreen(
                               type: 'My Requests',
                               currentCategory: widget.currentCategory,
+                              sort: 'Default',
                             ),
                           ),
                         );
@@ -229,11 +240,40 @@ class _RequestScreenState extends State<RequestScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
             child: TextField(
-              controller: controller,
+              controller: searchController,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 hintText: 'Search Requests',
               ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: DropdownButtonFormField(
+              value: widget.sort,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.sort),
+                //hintText: 'Sort by ' + widget.sort,
+              ),
+              items: sortCategories.map((category) {
+                return DropdownMenuItem(
+                  value: category,
+                  child: Text('$category'),
+                );
+              }).toList(),
+              // onChanged: (val) { setState(() => currentSort = val.toString());
+              //   print(currentSort);},
+              onChanged: (val) {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => RequestScreen(
+                      type: widget.type,
+                      currentCategory: widget.currentCategory,
+                      sort: val,
+                    ),
+                  ),
+                );
+              }
             ),
           ),
           Flexible(

@@ -23,7 +23,10 @@ class _RequestChatScreenState extends State<RequestChatScreen> {
           icon: Icon(Icons.arrow_back_rounded),
           onPressed: () {
             Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => RequestScreen(type: 'Available Requests', currentCategory: 'All Requests',)));
+                MaterialPageRoute(builder: (context) => RequestScreen(
+                  type: 'Available Requests',
+                  currentCategory: 'All Requests',
+                  sort: 'Default',)));
           },
         ),
         backgroundColor: Colors.cyan.shade900,
