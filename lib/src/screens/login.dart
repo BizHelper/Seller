@@ -79,7 +79,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     String? result = await Auth(auth: AuthService().auth).signin(_email, _password);
                     if (result == 'Success') {
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen(currentCategory: 'All Products',)));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomeScreen(
+                        currentCategory: 'All Products',)));
                     } else {
                       Fluttertoast.showToast(msg: result ?? '', gravity: ToastGravity.TOP);
                     }
