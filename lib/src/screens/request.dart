@@ -120,6 +120,7 @@ class _RequestScreenState extends State<RequestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.blueGrey[50],
       appBar: AppBar(
         backgroundColor: Colors.cyan[900],
@@ -238,7 +239,7 @@ class _RequestScreenState extends State<RequestScreen> {
             currentPage: widget.type,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 4.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0,),
             child: TextField(
               controller: searchController,
               decoration: const InputDecoration(
@@ -253,7 +254,6 @@ class _RequestScreenState extends State<RequestScreen> {
               value: widget.sort,
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.sort),
-                //hintText: 'Sort by ' + widget.sort,
               ),
               items: sortCategories.map((category) {
                 return DropdownMenuItem(
@@ -261,8 +261,6 @@ class _RequestScreenState extends State<RequestScreen> {
                   child: Text('$category'),
                 );
               }).toList(),
-              // onChanged: (val) { setState(() => currentSort = val.toString());
-              //   print(currentSort);},
               onChanged: (val) {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
