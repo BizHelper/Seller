@@ -41,7 +41,7 @@ class NavigateBar extends StatelessWidget {
                             builder: (context) => RequestScreen(
                                 type: 'Available Requests',
                                 currentCategory: 'All Requests',
-                                sort: 'Default')));
+                                sort: 'Default (Newest)')));
                   },
                   child: Column(
                     children: const [

@@ -26,7 +26,7 @@ class _RequestScreenState extends State<RequestScreen> {
   List filteredResults = [];
   late Future resultsLoaded;
   final List<String> sortCategories = [
-    'Default',
+    'Default (Newest)',
     'Price: high to low',
     'Price: low to high',
     'Deadline: latest to earliest',
@@ -103,7 +103,7 @@ class _RequestScreenState extends State<RequestScreen> {
       ? await data.orderBy('Price Double', descending: true).get()
       : widget.sort == 'Price: low to high'
       ? await data.orderBy('Price Double').get()
-      : await data.get();
+      : await data.orderBy('Time', descending: true).get();
     setState(() => allResults = sortedData.docs);
     searchResultList();
     return sortedData.docs;
@@ -174,7 +174,7 @@ class _RequestScreenState extends State<RequestScreen> {
                             builder: (context) => RequestScreen(
                               type: 'Available Requests',
                               currentCategory: widget.currentCategory,
-                              sort: 'Default',
+                              sort: 'Default (Newest)'
                             ),
                           ),
                         );
@@ -207,7 +207,7 @@ class _RequestScreenState extends State<RequestScreen> {
                             builder: (context) => RequestScreen(
                               type: 'My Requests',
                               currentCategory: widget.currentCategory,
-                              sort: 'Default',
+                              sort: 'Default (Newest)',
                             ),
                           ),
                         );

@@ -87,7 +87,7 @@ class CategoryButton extends StatelessWidget {
           } else {
             Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
-                    builder: (context) => RequestScreen(currentCategory: text, type: currentPage, sort: 'Default',)));
+                    builder: (context) => RequestScreen(currentCategory: text, type: currentPage, sort: 'Default (Newest)',)));
           }
         },
         style: TextButton.styleFrom(
