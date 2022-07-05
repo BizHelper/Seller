@@ -247,6 +247,7 @@ class _PostFormScreenState extends State<PostFormScreen> {
                       post.putIfAbsent('Description', () => _currentDescription);
                       post.putIfAbsent('Post ID', () => dr.id);
                       post.putIfAbsent('Seller Name', () => _sellerName);
+                      post.putIfAbsent('Time', () => DateTime.now().microsecondsSinceEpoch);
                       dr.set(post);
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => PostFormScreen()));
                     }
