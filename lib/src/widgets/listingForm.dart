@@ -256,6 +256,7 @@ class _ListingFormState extends State<ListingForm> {
                     listing.putIfAbsent('Seller Id', () => _sellerID);
                     listing.putIfAbsent('Deleted', () => 'false');
                     listing.putIfAbsent('Price Double', () => double.parse(_currentPrice));
+                    listing.putIfAbsent('Time', () => DateTime.now().microsecondsSinceEpoch);
                     dr.set(listing);
                     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ListingScreen()));
                   }

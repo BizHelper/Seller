@@ -18,6 +18,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _sellerName = '';
+  List allResults = [];
+  late Future resultsLoaded;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    resultsLoaded = getListingList();
+  }
+
+  getListingList() async {
+    await getSellerName();
+    var data = widget.currentCategory == 'All Products'
+        ? FirebaseFirestore.instance
+            .collection('listings')
+            .where('Seller Name', isEqualTo: _sellerName)
+            .where('Deleted', isEqualTo: 'false')
+        : FirebaseFirestore.instance
+            .collection('listings')
+            .where('Category', isEqualTo: widget.currentCategory)
+            .where('Seller Name', isEqualTo: _sellerName)
+            .where('Deleted', isEqualTo: 'false');
+    var sortedData = await data.orderBy('Time', descending: true).get();
+    setState(() => allResults = sortedData.docs);
+    return sortedData.docs;
+  }
 
   Future<String> getSellerName() async {
     final uid = AuthService().currentUser?.uid;
@@ -63,63 +88,43 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: widget.currentCategory == 'All Products' ?
-        FirebaseFirestore.instance.collection('listings')
-            .where('Seller Name', isEqualTo: getName())
-            .where('Deleted', isEqualTo: 'false')
-            .snapshots() :
-        FirebaseFirestore.instance.collection('listings')
-            .where('Category', isEqualTo: widget.currentCategory)
-            .where('Seller Name', isEqualTo: getName())
-            .where('Deleted', isEqualTo: 'false')
-            .snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Container();
-          }
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 8.0, top: 8.0),
-                child: Text(
-                  'My Products',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 8.0, top: 8.0),
+            child: Text(
+              'My Products',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
               ),
-              Categories(
-                currentCategory: widget.currentCategory,
-                currentPage: 'Home',
+            ),
+          ),
+          Categories(
+            currentCategory: widget.currentCategory,
+            currentPage: 'Home',
+          ),
+          Flexible(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              itemCount: allResults.length,
+              itemBuilder: (BuildContext context, int index) => Product(
+                prodName: allResults[index]['Name'],
+                prodShopName: allResults[index]['Seller Name'],
+                prodPrice: allResults[index]['Price'],
+                prodCategory: allResults[index]['Category'],
+                prodDescription: allResults[index]['Description'],
+                prodImage: allResults[index]['Image URL'],
+                prodID: allResults[index]['Listing ID'],
+                sellerID: allResults[index]['Seller Id'],
+                deleted: allResults[index]['Deleted'],
               ),
-              Flexible(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  children: snapshot.data!.docs.map(
-                    (listings) {
-                      return Product(
-                        prodName: listings['Name'],
-                        prodShopName: listings['Seller Name'],
-                        prodPrice: listings['Price'],
-                        prodCategory: listings['Category'],
-                        prodDescription: listings['Description'],
-                        prodImage: listings['Image URL'],
-                        prodID: listings['Listing ID'],
-                        sellerID: listings['Seller Id'],
-                        deleted: listings['Deleted'],
-                      );
-                    },
-                  ).toList(),
-                ),
-              ),
-              NavigateBar(),
-            ],
-          );
-        },
+            ),
+          ),
+          NavigateBar(),
+        ],
       ),
     );
   }
