@@ -37,6 +37,29 @@ class _ListingFormState extends State<ListingForm> {
   late String _currentDescription;
   bool imageSelected = false;
 
+  showAlertDialog(BuildContext context) {
+    AlertDialog dialog = AlertDialog(
+      title: const Text(
+        'Photo has not been selected',
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('OK'),
+        ),
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return dialog;
+        }
+    );
+  }
+
   Future<void> getName() async {
     final uid = AuthService().currentUser?.uid;
     DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
@@ -245,7 +268,9 @@ class _ListingFormState extends State<ListingForm> {
               ElevatedButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(Colors.amber[600])),
-                onPressed: () {},
+                onPressed: () {
+                  showAlertDialog(context);
+                },
                 child: const Text(
                   'Add',
                   style: TextStyle(color: Colors.black),

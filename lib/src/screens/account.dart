@@ -4,6 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:seller_app/src/screens/login.dart';
+import 'package:seller_app/src/screens/shopInfo.dart';
 import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/widgets/navigateBar.dart';
 
@@ -110,7 +111,8 @@ class _AccountScreenState extends State<AccountScreen> {
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
                     onPressed: () {
-
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ShopInfoScreen()));
                     },
                     child: const Text(
                       'Update Shop Info',

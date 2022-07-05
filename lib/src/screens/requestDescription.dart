@@ -208,6 +208,9 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                               DocumentReference dr = FirebaseFirestore.instance.collection('requests').doc(widget.requestID);
                               dr.update({'Seller Name' : _sellerName});
                               dr.update({'Accepted' : 'true'});
+
+                              createChatRoom();
+
                               Navigator.pop(context);
                             },
                             child: Column(

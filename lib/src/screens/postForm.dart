@@ -28,6 +28,28 @@ class _PostFormScreenState extends State<PostFormScreen> {
   bool videoSelected = false;
   bool imageSelected = false;
 
+  showAlertDialog(BuildContext context) {
+    AlertDialog dialog = AlertDialog(
+      title: const Text(
+        'Photo and/or video not selected',
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('OK'),
+        ),
+      ],
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return dialog;
+        }
+    );
+  }
 
   Future<void> getName() async {
     final uid = AuthService().currentUser?.uid;
@@ -237,7 +259,9 @@ class _PostFormScreenState extends State<PostFormScreen> {
                 ElevatedButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(Colors.amber[600])),
-                  onPressed: () {},
+                  onPressed: () {
+                    showAlertDialog(context);
+                  },
                   child: const Text(
                     'Add',
                     style: TextStyle(color: Colors.black),
