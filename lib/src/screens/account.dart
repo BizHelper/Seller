@@ -110,9 +110,22 @@ class _AccountScreenState extends State<AccountScreen> {
                   ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
-                    onPressed: () {
+                    onPressed: () async {
+                      final uid = AuthService().currentUser?.uid;
+                      DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
+                      String hasShop = ds.get('hasShop');
+                      String address = '';
+                      String description = '';
+                      if (hasShop == 'true') {
+                        address = ds.get('Address');
+                        description = ds.get('Description');
+                      }
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => ShopInfoScreen()));
+                          MaterialPageRoute(builder: (context) => ShopInfoScreen(
+                            hasShop: hasShop,
+                            address: address,
+                            description: description,
+                          )));
                     },
                     child: const Text(
                       'Update Shop Info',

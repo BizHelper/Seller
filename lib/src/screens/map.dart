@@ -8,11 +8,17 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:provider/provider.dart';
 import 'package:seller_app/src/providers/locationProvider.dart';
 import 'package:seller_app/src/screens/shopInfo.dart';
+import 'package:seller_app/src/screens/shopInfoForm.dart';
 import 'package:seller_app/src/services/authService.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
   static const String id = 'map-screen';
+  var hasShop;
+  var address;
+  var description;
+
+  MapScreen({required this.hasShop, required this.address, required this.description});
+
   @override
   State<MapScreen> createState() => _MapScreenState();
 }
@@ -49,11 +55,21 @@ class _MapScreenState extends State<MapScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Set Shop Location'),
+        title: const Text(
+          'Set Shop Location',
+          style: TextStyle(
+            fontSize: 23.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leading: BackButton(
           color: Colors.white,
           onPressed: () => Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => ShopInfoScreen())),
+              MaterialPageRoute(builder: (context) => ShopInfoScreen(
+                hasShop: widget.hasShop,
+                address: widget.address,
+                description: widget.description,
+              ))),
         ),
         backgroundColor: Colors.cyan[900],
         centerTitle: true,
@@ -102,7 +118,14 @@ class _MapScreenState extends State<MapScreen> {
                         backgroundColor:
                             MaterialStateProperty.all(Colors.orange[600]),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => ShopInfoFormScreen(
+                              hasShop: widget.hasShop,
+                              address: widget.address,
+                              description: widget.description,
+                            )));
+                      },
                       child: const Text(
                         'Continue',
                         style: TextStyle(color: Colors.black),

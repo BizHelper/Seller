@@ -51,12 +51,6 @@ class _PostFormScreenState extends State<PostFormScreen> {
     );
   }
 
-  Future<void> getName() async {
-    final uid = AuthService().currentUser?.uid;
-    DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
-    _sellerName = ds.get('Name');
-  }
-
   Future selectVideoFile() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
