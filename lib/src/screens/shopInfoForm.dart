@@ -6,10 +6,11 @@ import 'package:seller_app/src/services/authService.dart';
 
 class ShopInfoFormScreen extends StatefulWidget {
   var hasShop;
+  var name;
   var address;
   var description;
 
-  ShopInfoFormScreen({required this.hasShop, required this.address, required this.description});
+  ShopInfoFormScreen({required this.hasShop, required this.name, required this.address, required this.description});
 
   @override
   State<ShopInfoFormScreen> createState() => _ShopInfoFormScreenState();
@@ -39,6 +40,7 @@ class _ShopInfoFormScreenState extends State<ShopInfoFormScreen> {
           onPressed: () => Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => MapScreen(
                 hasShop: widget.hasShop,
+                name: widget.name,
                 address: widget.address,
                 description: widget.description,
               ))),

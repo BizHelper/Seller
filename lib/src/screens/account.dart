@@ -114,6 +114,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       final uid = AuthService().currentUser?.uid;
                       DocumentSnapshot ds = await FirebaseFirestore.instance.collection('sellers').doc(uid).get();
                       String hasShop = ds.get('hasShop');
+                      String name = ds.get('Name');
                       String address = '';
                       String description = '';
                       if (hasShop == 'true') {
@@ -123,6 +124,7 @@ class _AccountScreenState extends State<AccountScreen> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => ShopInfoScreen(
                             hasShop: hasShop,
+                            name: name,
                             address: address,
                             description: description,
                           )));

@@ -14,10 +14,11 @@ import 'package:seller_app/src/services/authService.dart';
 class MapScreen extends StatefulWidget {
   static const String id = 'map-screen';
   var hasShop;
+  var name;
   var address;
   var description;
 
-  MapScreen({required this.hasShop, required this.address, required this.description});
+  MapScreen({required this.hasShop, required this.name, required this.address, required this.description});
 
   @override
   State<MapScreen> createState() => _MapScreenState();
@@ -67,6 +68,7 @@ class _MapScreenState extends State<MapScreen> {
           onPressed: () => Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => ShopInfoScreen(
                 hasShop: widget.hasShop,
+                name: widget.name,
                 address: widget.address,
                 description: widget.description,
               ))),
@@ -122,6 +124,7 @@ class _MapScreenState extends State<MapScreen> {
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (context) => ShopInfoFormScreen(
                               hasShop: widget.hasShop,
+                              name: widget.name,
                               address: widget.address,
                               description: widget.description,
                             )));
