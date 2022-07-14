@@ -58,16 +58,24 @@ class _RequestScreenState extends State<RequestScreen> {
 
   searchResultList() {
     var showResults = [];
+    int currentDate = DateTime.now().subtract(Duration(days: 1)).microsecondsSinceEpoch;
     if (searchController.text != '') {
       for (var request in allResults) {
         var title = request['Title'].toString().toLowerCase();
+        int date = request['Integer Deadline'];
 
-        if (title.contains(searchController.text.toLowerCase())) {
+        if (title.contains(searchController.text.toLowerCase()) && date > currentDate) {
           showResults.add(request);
         }
       }
     } else {
-      showResults = List.from(allResults);
+      for (var request in allResults) {
+        int date = request['Integer Deadline'];
+
+        if (date > currentDate) {
+          showResults.add(request);
+        }
+      }
     }
     setState(() => filteredResults = showResults);
   }
