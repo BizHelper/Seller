@@ -10,7 +10,11 @@ class Auth {
           email: _email, password: _password);
       return "Success";
     } on FirebaseAuthException catch (error) {
-      return error.message;
+      if (error.message == 'Given String is empty or null') {
+        return 'The password is invalid';
+      } else {
+        return error.message;
+      }
     }
   }
 
@@ -21,7 +25,11 @@ class Auth {
           email: _email, password: _password);
       return "Success";
     } on FirebaseAuthException catch (error) {
-      return error.message;
+      if (error.message == 'Given String is empty or null') {
+        return 'The password is invalid';
+      } else {
+        return error.message;
+      }
     }
   }
 }
