@@ -103,6 +103,10 @@ class _RequestScreenState extends State<RequestScreen> {
       ? await data.orderBy('Price Double', descending: true).get()
       : widget.sort == 'Price: low to high'
       ? await data.orderBy('Price Double').get()
+      : widget.sort == 'Deadline: latest to earliest'
+      ? await data.orderBy('Integer Deadline', descending: true).get()
+      : widget.sort == 'Deadline: earliest to latest'
+      ? await data.orderBy('Integer Deadline').get()
       : await data.orderBy('Time', descending: true).get();
     setState(() => allResults = sortedData.docs);
     searchResultList();
