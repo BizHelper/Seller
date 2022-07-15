@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/screens/post.dart';
 import 'package:seller_app/src/services/authService.dart';
 
 class PostFormScreen extends StatefulWidget {
@@ -30,9 +31,11 @@ class _PostFormScreenState extends State<PostFormScreen> {
 
   showAlertDialog(BuildContext context) {
     AlertDialog dialog = AlertDialog(
-      title: const Text(
-        'Photo and/or video not selected',
-      ),
+      title: !videoSelected && !imageSelected
+        ? Text('Photo and video have not been selected')
+        : !videoSelected
+        ? Text('Video has not been selected')
+        : Text('Photo has not been selected'),
       actions: [
         ElevatedButton(
           onPressed: () {
@@ -243,7 +246,12 @@ class _PostFormScreenState extends State<PostFormScreen> {
                       post.putIfAbsent('Seller Name', () => _sellerName);
                       post.putIfAbsent('Time', () => DateTime.now().microsecondsSinceEpoch);
                       dr.set(post);
-                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => PostFormScreen()));
+                      //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => PostFormScreen()));
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => PostScreen()),
+                            (Route<dynamic> route) => false,
+                      );
                     }
                   },
                   child: const Text(

@@ -131,7 +131,7 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                 child: Text(
                   'by ' + widget.buyerName,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -140,7 +140,7 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                 child: Text(
                   'Deadline: ' + widget.deadline,
                   style: const TextStyle(
-                    fontSize: 15,
+                    fontSize: 16,
                   ),
                 ),
               ),

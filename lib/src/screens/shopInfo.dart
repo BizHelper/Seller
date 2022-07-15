@@ -47,12 +47,30 @@ class _ShopInfoScreenState extends State<ShopInfoScreen> {
                 ),
               ),
               SizedBox(height: 20),
+              const Text(
+                'Address:',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
               Text(
-                'Address: ' + widget.address,
+                widget.address,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
               ),
               SizedBox(height: 20),
+              const Text(
+                'Shop Description:',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
               Text(
-                'Shop Description: ' + widget.description,
+                widget.description,
+                style: const TextStyle(
+                  fontSize: 16,
+                ),
               ),
               SizedBox(height: 20),
               Row(
