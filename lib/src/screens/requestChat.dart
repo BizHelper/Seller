@@ -26,7 +26,7 @@ class _RequestChatScreenState extends State<RequestChatScreen> {
                 MaterialPageRoute(builder: (context) => RequestScreen(
                   type: 'Available Requests',
                   currentCategory: 'All Requests',
-                  sort: 'Default',)));
+                  sort: 'Default (Newest)',)));
           },
         ),
         backgroundColor: Colors.cyan.shade900,
