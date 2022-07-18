@@ -116,7 +116,7 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                     ),
                     SizedBox(width: 30),
                     Text(
-                      '\$ ' + widget.price,
+                      '\$' + widget.price,
                       style: const TextStyle(
                         color: Colors.red,
                         fontSize: 20,

@@ -51,6 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                key: Key('enterEmail'),
                 keyboardType: TextInputType.emailAddress,
                 decoration: InputDecoration(hintText: 'Email'),
                 onChanged: (value) {
@@ -61,6 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                key: Key('enterPassword'),
                 obscureText: true,
                 decoration: InputDecoration(hintText: 'Password'),
                 onChanged: (value) {
@@ -72,6 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 ElevatedButton(
+                  key: Key('signIn'),
                   style: ButtonStyle(
                     backgroundColor:
                         MaterialStateProperty.all(Colors.orange[600]),

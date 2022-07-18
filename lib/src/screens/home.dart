@@ -72,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
           ),
           IconButton(
+            key: Key('signOut'),
             icon: Icon(Icons.logout),
             onPressed: () {
               AuthService().auth.signOut();

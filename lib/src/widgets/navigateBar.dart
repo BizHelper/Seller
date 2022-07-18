@@ -54,6 +54,7 @@ class NavigateBar extends StatelessWidget {
               SizedBox(
                 width: 52.0,
                 child: InkWell(
+                  key: Key('homeScreen'),
                   onTap: () {
                     Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
