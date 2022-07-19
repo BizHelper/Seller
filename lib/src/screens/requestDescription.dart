@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/screens/request.dart';
 import 'package:seller_app/src/services/authService.dart';
 import 'package:seller_app/src/services/firebaseService.dart';
 import 'package:seller_app/src/screens/chatConversation.dart';
@@ -209,9 +210,14 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                               dr.update({'Seller Name' : _sellerName});
                               dr.update({'Accepted' : 'true'});
 
-                              createChatRoom();
-
                               Navigator.pop(context);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => RequestScreen(
+                                          type: 'My Requests',
+                                          currentCategory: 'All Requests',
+                                          sort: 'Default (Newest)')));
+                              createChatRoom();
                             },
                             child: Column(
                               children: const [
@@ -269,6 +275,12 @@ class _RequestDescriptionScreenState extends State<RequestDescriptionScreen> {
                               DocumentReference dr = FirebaseFirestore.instance.collection('requests').doc(widget.requestID);
                               dr.update({'Accepted' : 'completed'});
                               Navigator.pop(context);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => RequestScreen(
+                                          type: 'Available Requests',
+                                          currentCategory: 'All Requests',
+                                          sort: 'Default (Newest)')));
                             },
                             child: Column(
                               children: const [
