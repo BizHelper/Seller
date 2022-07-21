@@ -32,6 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
       body: StreamBuilder<QuerySnapshot>(
         stream: _service.messages
             .where('users', arrayContains: AuthService().auth.currentUser!.uid)
+            .orderBy('lastChatTime', descending: true)
             .snapshots(),
         builder: (BuildContext context,
             AsyncSnapshot<QuerySnapshot> snapshot) {

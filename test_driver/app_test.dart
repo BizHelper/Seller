@@ -8,15 +8,7 @@ void main() {
     final signIn = find.byValueKey("signIn");
     final homeScreen = find.byValueKey('homeScreen');
     final signOut = find.byValueKey('signOut');
-    // final requestPage = find.byValueKey("requestPage");
-    // final addNewRequestButton = find.byValueKey("addNewRequest");
-    //final addNewRequestButton = find.byKey(ValueKey("addNewRequest"));
-    // final addTitle = find.byValueKey("addTitle");
-    // final addPrice = find.byValueKey("addPrice");
-    // final addCategory = find.byValueKey("addCategory");
-    // final addDescription = find.byValueKey("addDescription");
-    // final addDeadline = find.byValueKey("addDeadline");
-    // final addButton = find.byValueKey("addButton");
+
     late FlutterDriver driver;
     setUpAll(() async {
       driver = await FlutterDriver.connect();
@@ -43,30 +35,4 @@ void main() {
       }
     });
   });
-
-
-
-    // test("Request", () async{
-    //   await driver.tap(requestPage);
-    //   await driver.tap(addNewRequestButton);
-    //   await driver.tap(addTitle);
-    //   await driver.enterText("Custom-made leather wallet");
-    //   await driver.tap(addPrice);
-    //   await driver.enterText("22");
-    //   await driver.tap(addCategory);
-    //   await driver.tap(find.text('Bags & Wallets'));
-    //   await driver.tap(addDescription);
-    //   await driver.enterText(
-    //       "Looking for a brown wallet made out of lamb leather");
-    //   await driver.tap(addDeadline);
-    //   await driver.tap(find.text("27"));
-    //   await driver.tap(find.text("OK"));
-    //   await driver.tap(addButton);
-    //   //await driver.tap(find.pageBack());
-    // });
-
-
-
-
-
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:seller_app/src/screens/home.dart';
 
 class ProductDescriptionScreen extends StatelessWidget {
   var productDetailName;
@@ -134,6 +135,9 @@ class ProductDescriptionScreen extends StatelessWidget {
                         DocumentReference dr = FirebaseFirestore.instance.collection('listings').doc(productID);
                         dr.update({'Deleted' : 'true'});
                         Navigator.of(context).pop();
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen(currentCategory: 'All Products',)));
                       },
                       child: Column(
                         children: [
