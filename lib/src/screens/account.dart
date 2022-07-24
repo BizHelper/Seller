@@ -142,7 +142,6 @@ class _AccountScreenState extends State<AccountScreen> {
                           backgroundColor: MaterialStateProperty.all(Colors.orange[600])),
                         onPressed: () async {
                           final uid = AuthService().currentUser?.uid;
-                          String sellerName = getName();
                           DocumentReference dr = FirebaseFirestore.instance.collection('sellers').doc(uid);
                           final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
                           if (pickedFile == null) {
@@ -154,8 +153,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           Reference ref = storage.ref().child(pickedFile.path + DateTime.now().toString());
                           await ref.putFile(image);
                           String imageURL = await ref.getDownloadURL();
-                          dr.set({
-                            'Name': sellerName,
+                          dr.update({
                             'Profile Pic': imageURL
                           });
                           setState(() => _image = imageURL);
