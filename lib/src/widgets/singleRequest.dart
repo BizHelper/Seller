@@ -71,13 +71,13 @@ class SingleRequest extends StatelessWidget {
               Icon(
                 Icons.info,
                 size: 28.0,
-                color: Colors.red[900],
+                color: Colors.brown[500]
               ),
               Text(
                 'Find out more!',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.red[900],
+                  color: Colors.brown[800],
                 ),
               ),
             ],

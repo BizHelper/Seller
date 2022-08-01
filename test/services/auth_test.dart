@@ -10,27 +10,9 @@ class UserMock extends Mock implements User {}
 @GenerateMocks([FirebaseAuth])
 void main() {
   @GenerateMocks([UserMock])
-  // final UserMock _mockUser = UserMock();
-  // @override
-  // Stream<User> authStateChanges() {
-  //   return Stream.fromIterable([
-  //     _mockUser,
-  //   ]);
-  // }
   final MockFirebaseAuth mockFirebaseAuth = MockFirebaseAuth();
-  //final Auth userAuth = Auth(auth: mockFirebaseAuth);
-  //tearDown(() {});
 
   group('Sign in', () {
-    // test("valid sign in", () async {
-    //   when(
-    //     mockFirebaseAuth.signInWithEmailAndPassword(
-    //         email: "abc@gmail.com", password: "bizhelper00"),
-    //   ).thenAnswer((_) async => "Success";
-    //   expect(await Auth(auth: mockFirebaseAuth).signin("abc@gmail.com", "bizhelper00"),
-    //       "Success");
-    // });
-
     test("no email address", () async {
       when(
         mockFirebaseAuth.signInWithEmailAndPassword(
@@ -91,15 +73,6 @@ void main() {
   });
   
   group('Sign up', () {
-    // test("valid sign in", () async {
-    //   when(
-    //     mockFirebaseAuth.signInWithEmailAndPassword(
-    //         email: "abc@gmail.com", password: "bizhelper00"),
-    //   ).thenAnswer((_) async => "Success";
-    //   expect(await Auth(auth: mockFirebaseAuth).signin("abc@gmail.com", "bizhelper00"),
-    //       "Success");
-    // });
-
     test("no email address", () async {
       when(
         mockFirebaseAuth.createUserWithEmailAndPassword(
